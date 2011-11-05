@@ -5,17 +5,19 @@ require 'bundler/setup'
 
 module ApacheBenchmarkActivity
 
-  def install(installer)
-    installer.run([
-        'aptitude install apache2-utils',
-        'apt-get install apache2-utils',
-        'pacman -S apache'
-    ])
+  def install(env)
+    env.install({
+        :debian=>'aptitude install apache2-utils',
+        :arch=>'pacman -S apache'
+    })
   end
 
-  def execute(options = {})
-    server = options[:server]
-    server.run("ab -k -n #{options[:requests]} -n #{options[:clients]}")
+  def execute(env, options)    
+    env.run do |shell|
+      shell.exec("ab -k -n #{options[:requests]} -n #{options[:clients]}")    
+    end
+    
+    env.join!
   end
 
   def parse(output)
