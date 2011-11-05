@@ -7,8 +7,9 @@ module ApacheBenchmarkActivity
 
   def install(env)
     env.install({
-        :debian=>'aptitude install apache2-utils',
-        :arch=>'pacman -S apache'
+        :apt=>'aptitude install apache2-utils',
+        :pacman=>'pacman -S apache',
+        :yum => 'init 0'
     })
   end
 
