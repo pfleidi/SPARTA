@@ -1,0 +1,7 @@
+pkg
+tmp
+*~
+*swp
+*gem
+.bundle
+Gemfile.lock
