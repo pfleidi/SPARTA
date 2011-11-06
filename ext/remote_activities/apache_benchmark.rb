@@ -7,9 +7,9 @@ module ApacheBenchmarkActivity
 
   def install(env)
     env.install({
-        :apt=>'aptitude install apache2-utils',
-        :pacman=>'pacman -S apache',
-        :yum => 'init 0'
+      :aptitude => 'aptitude install apache2-utils',
+      :pacman => 'pacman -S apache',
+      :yum => 'init 0'
     })
   end
 
@@ -17,7 +17,7 @@ module ApacheBenchmarkActivity
     env.run do |shell|
       shell.exec("ab -k -n #{options[:requests]} -n #{options[:clients]}")    
     end
-    
+
     env.join!
   end
 
