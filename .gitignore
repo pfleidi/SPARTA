@@ -4,4 +4,5 @@ tmp
 *swp
 *gem
 .bundle
+coverage
 Gemfile.lock
