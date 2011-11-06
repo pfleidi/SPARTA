@@ -1,7 +1,7 @@
 require 'test/unit'
 require 'mocha'
 
-class MiscExampleTest < Test::Unit::TestCase
+class RemoteActivityTest < Test::Unit::TestCase
 
   def test_module_loading
   end
