@@ -3,7 +3,7 @@
 @warrior = Warrior.new(
   :provider => :ec2,
   :credentials => {}, #optional ...
-  :options => { :ami_id => 'fufufufufu'}
+  :options => { :ami_id => 'fufufufufu' }
 )
 
 @warrior.arm do |weapons|
@@ -13,6 +13,6 @@ end
 @squad.recruit(@warrior)
 @squad.recruit(..)
 
-@squad.engage("http://xerxes.com") do |warrior|
+@squad.engage_battle("http://xerxes.com") do |warrior|
   warrior.fight( .... )
 end
