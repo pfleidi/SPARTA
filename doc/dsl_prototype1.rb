@@ -13,6 +13,5 @@ end
 @squad.recruit(@warrior)
 @squad.recruit(..)
 
-@squad.engage_battle("http://xerxes.com") do |warrior|
-  warrior.fight( .... )
-end
+@squad.add_strategy(:attacks => 100, :concurrent_hits => 20)
+@squad.engage_battle(:with => "http://xerxes.com")
