@@ -2,7 +2,6 @@
 module Sparta
 
   class Squad
-    include Enumerable
 
     def initialize(env = {})
       @warriors = [ ]
@@ -20,10 +19,13 @@ module Sparta
       @warriors.size
     end
 
-    def each(&block)
-      @warriors.each { |warrior| block.call(warrior) }
+    def engage_battle(options = {})
+      target = options[:with]
+
+      @warriors.each do |warrior|
+        warrior.attack(target)
+      end
     end
 
   end
-
 end
