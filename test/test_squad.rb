@@ -34,4 +34,17 @@ class SquadTest < Test::Unit::TestCase
     @squad.engage_battle(:with => @enemy) 
   end
 
+  def test_engage_strategic_battle
+    opts = { :attack => 100, :concurrent_hits => 20 }
+
+    3.times do
+      warrior = mock
+      warrior.expects(:attack).with(@enemy, opts).once
+      @squad.recruit(warrior)
+    end
+
+    @squad.add_strategy(opts)
+    @squad.engage_battle(:with => @enemy) 
+  end
+
 end
