@@ -1,7 +1,7 @@
 
 module Sparta
 
-  class RemoteActivity
+  class Squad
     
     def inititalize(env = {})
     end
