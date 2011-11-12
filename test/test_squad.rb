@@ -24,7 +24,6 @@ class SquadTest < Test::Unit::TestCase
   end
 
   def test_engage_normal_battle
-
     5.times do
       warrior = mock
       warrior.expects(:attack).with(@enemy).once
@@ -46,5 +45,23 @@ class SquadTest < Test::Unit::TestCase
     @squad.add_strategy(opts)
     @squad.engage_battle(:with => @enemy) 
   end
+
+  def test_engage_multi_strategy_battle
+    opts1 = { :attack => 100, :concurrent_hits => 20 }
+    opts2 = { :attack => 500, :concurrent_hits => 40 }
+    battle = sequence('really hard battle')
+
+    4.times do
+      warrior = mock
+      warrior.expects(:attack).with(@enemy, opts1).in_sequence(battle)
+      warrior.expects(:attack).with(@enemy, opts2).in_sequence(battle)
+      @squad.recruit(warrior)
+    end
+
+    @squad.add_strategy(opts1)
+    @squad.add_strategy(opts2)
+    @squad.engage_battle(:with => @enemy) 
+  end
+
 
 end
