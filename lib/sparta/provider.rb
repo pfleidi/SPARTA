@@ -1,5 +1,5 @@
-require './lib/credentials'
-require 'fog'
+require 'rubygems'
+require 'bundler/setup'
 
 module Sparta
   class Providers
@@ -11,14 +11,14 @@ module Sparta
       providerName = child.name.to_s.downcase.to_sym
       self.providers[providerName] = child
     end
-  end
 
-  def self.load_providers
-    path = "ext/instance_providers"
-    $LOAD_PATH.unshift(path)
+    def self.load_providers
+      path = "ext/instance_providers"
+      $LOAD_PATH.unshift(path)
 
-    Dir[File.join(path, "*.rb")].each do |provider|
-      require File.basename(provider)
+      Dir[File.join(path, "*.rb")].each do |provider|
+        require File.basename(provider)
+      end
     end
   end
 end
