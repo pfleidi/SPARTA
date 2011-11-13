@@ -1,24 +1,14 @@
-require 'fog'
+require 'rubygems'
+require 'bundler/setup'
+
+require 'wrapper/fog_provider_wrapper'
 
 class AmazonEC2 < Sparta::Providers
-  def self.create_instance(env = {})
-    connection = self.connect(env)
-
-    instance = connection.servers.create
-    instance.wait_for { ready? }
-
-    instance.id
-  end
-
-  def self.destroy_instance(env = {})
-    connection = self.connect(env)
-    instance = connection.servers.get(env[:id]).destroy
-  end
+  include FogInstanceProvider
 
   def self.connect(env = {})
-    Fog.mock!
     name = self.name.to_s.downcase.to_sym
-
+    Fog.mock!
     credentials = env[:credentials]
     credentials ||= Sparta::Credentials.providers[name]
 
