@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'bundler/setup'
 
-require 'wrapper/fog_provider_wrapper'
 require 'fog'
 
 class Rackspace < Sparta::Providers
