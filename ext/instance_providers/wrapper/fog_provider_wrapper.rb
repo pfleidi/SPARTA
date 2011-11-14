@@ -9,8 +9,7 @@ module FogProviderWrapper
   module ClassMethods
     def create_instance(env = {})
       connection = connect(env)
-      instance = connection.servers.create
-      instance.wait_for { ready? }
+      instance = connection.servers.bootstrap(env)
       instance.id
     end
 

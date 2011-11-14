@@ -2,9 +2,10 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'wrapper/fog_provider_wrapper'
+require 'fog'
 
 class Rackspace < Sparta::Providers
-  include FogInstanceProvider
+  include FogProviderWrapper
   def self.connect(env = {})
     name = self.name.to_s.downcase.to_sym
 
