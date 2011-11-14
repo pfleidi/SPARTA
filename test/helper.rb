@@ -4,3 +4,4 @@ require 'test/unit'
 
 require 'sparta'
 require 'mocha'
+require 'fog'
