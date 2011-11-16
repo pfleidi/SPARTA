@@ -20,7 +20,7 @@ class AmazonEC2 < Sparta::Providers
 
   def self.create_instance(env = {})
     connection = connect(env)
-    
+
     if connection.key_pairs.get('sparta_tmp_kp')
       connection.key_pairs.get('sparta_tmp_kp').destroy
     end
@@ -50,8 +50,8 @@ class AmazonEC2 < Sparta::Providers
     rescue Timeout::Error
       instance.destroy
     end
-    
-    instance_data = {
+
+    return instance_data = {
       :id => instance.id,
       :username => instance.username,
       :private_key => key_pair.private_key,

@@ -9,8 +9,7 @@ class Rackspace < Sparta::Providers
 
     credentials = env[:credentials]
     credentials ||= Sparta::Credentials.providers[name]
-
-    #Rackspace_auth_url for european rackspace instances
+    
     connection = Fog::Compute.new({
       :provider => 'Rackspace',
       :rackspace_username => credentials[:id],
