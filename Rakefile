@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'rake'
 
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), *%w[lib]))
+
 require 'cucumber/rake/task'
 Cucumber::Rake::Task.new do |t|
   t.cucumber_opts = %w{--format pretty}
@@ -17,7 +19,7 @@ desc "Generate RCov test coverage and open in your browser"
 task :coverage do
   require 'rcov'
   sh "rm -fr coverage"
-  sh "rcov test/test_*.rb"
+  sh "rcov -I lib:test test/test_*.rb"
   sh "open coverage/index.html"
 end
 
