@@ -1,24 +1,16 @@
-#!/usr/bin/env ruby
 
-require 'rubygems'
-require 'bundler/setup'
+module ApacheBenchmark
 
-module ApacheBenchmarkActivity
-
-  def install(env)
-    env.install({
-      :aptitude => 'aptitude install apache2-utils',
-      :pacman => 'pacman -S apache',
+  def setup
+    {
+      :'apt-get'=> 'apt-get update && apt-get install apache2-utils',
+      :pacman => 'pacman -Sy apache',
       :yum => 'init 0'
-    })
+    }
   end
 
-  def execute(env, options)    
-    env.run do |shell|
-      shell.exec("ab -k -n #{options[:requests]} -n #{options[:clients]}")    
-    end
-
-    env.join!
+  def execute(options)    
+    "ab -k -n #{options[:requests]} -n #{options[:clients]}"
   end
 
   def parse(output)
