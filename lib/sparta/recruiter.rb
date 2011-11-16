@@ -13,7 +13,7 @@ module Sparta
     end
 
     def self.load_providers
-      path = "ext/instance_providers"
+      path = "ext/boot_camps"
       $LOAD_PATH.unshift(path)
 
       Dir[File.join(path, "*.rb")].each do |provider|
