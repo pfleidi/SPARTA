@@ -6,7 +6,7 @@ require 'rubygems'
 
 require 'sparta/squad'
 require 'sparta/warrior'
-require 'sparta/provider'
+require 'sparta/recruiter'
 require 'sparta/credentials'
 
 module Sparta

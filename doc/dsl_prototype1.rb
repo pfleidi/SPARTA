@@ -1,8 +1,12 @@
 @squad = Squad.new
 
+# valid credentials
+# :credentials = { :aws_secret => ..., :aws_id => ... }
+# if there is no keyfile specifiec, keys will be created.
+
 @warrior = Warrior.new(
   :provider => :ec2,
-  :credentials => {}, #optional ...
+  :credentials => {}, 
   :options => { :ami_id => 'fufufufufu' }
 )
 
