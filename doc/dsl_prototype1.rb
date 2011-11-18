@@ -10,9 +10,7 @@
   :options => { :ami_id => 'fufufufufu' }
 )
 
-@warrior.arm do |weapons|
-  weapons.add :apache_benchmark, ....
-end
+@warrior.arm(Weapon.new(:apache_benchmark))
 
 @squad.recruit(@warrior)
 @squad.recruit(..)
