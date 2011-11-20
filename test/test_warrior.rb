@@ -1,31 +1,29 @@
 require 'helper'
 
 class WarriorTest < Test::Unit::TestCase
+  
   def setup
-    @mock_provider = mock()
+    @mock_ssh = mock
+    @warrior = Sparta::Warrior.new(@mock_ssh)
+    @weapon_sequence= sequence('random firing sequence')
+    
 
-    Sparta::BootCamp.boot_camps[:mock] = @mock_provider
-
-    @mock_provider.expects(:create_instance).returns({
-      :host => '10.10.10.10',
-      :id => '1'
-    })
   end
+  
 
-  def test_creating_warrior
-    warrior = Sparta::Warrior.new(:boot_camp => :mock)
-
-    assert_equal warrior.instance, {:id => '1', :host => '10.10.10.10'}
+  
+  def test_warrior
+    mock_weapon = mock
+    
+    mock_weapon.expects(:install).with(@mock_ssh).in_sequence(@weapon_sequence)
+    mock_weapon.expects(:'is_working?').in_sequence(@weapon_sequence)
+    mock_weapon.expects(:'use').in_sequence(@weapon_sequence)
+    @warrior.arm(mock_weapon)
+    assert(@warrior.is_armed?)
+    @warrior.expects(:'attack!')
+    @warrior.attack!
+    
   end
+  
 
-  def test_kill_warrior
-    warrior = Sparta::Warrior.new(:boot_camp => :mock)
-
-    @mock_provider.expects(:destroy_instance).with({
-      :id => warrior.instance[:id],
-      :credentials => warrior.credentials
-    }).returns(true)
-
-    assert_equal warrior.kill, true
-  end
 end

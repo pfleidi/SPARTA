@@ -1,4 +1,4 @@
-require 'helper'
+require_relative './helper'
 
 class SquadTest < Test::Unit::TestCase
 

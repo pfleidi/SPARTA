@@ -1,7 +1,6 @@
 
 module ApacheBenchmark
-
-  def setup
+  def dependencies
     {
       :'apt-get'=> 'apt-get update && apt-get install apache2-utils',
       :pacman => 'pacman -Sy apache',
@@ -14,7 +13,9 @@ module ApacheBenchmark
   end
 
   def parse(output)
+    
     # return parsed data structure of string output
   end
 
 end
+Sparta::Weapon.register(ApacheBenchmark, :apache_benchmark)

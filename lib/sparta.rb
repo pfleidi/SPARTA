@@ -5,8 +5,9 @@ require 'rubygems'
 # Internal requires
 
 require 'sparta/squad'
+require 'sparta/weapon'
 require 'sparta/warrior'
-require 'sparta/recruiter'
+require 'sparta/boot_camp'
 require 'sparta/credentials'
 
 module Sparta

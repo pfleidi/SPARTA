@@ -5,63 +5,55 @@ require "fog"
 
 class AmazonEC2 < Sparta::BootCamp
 
-  def self.connect(env = {})
-    name = self.name.to_s.downcase.to_sym
 
-    credentials = env[:credentials]
-    credentials ||= Sparta::Credentials.boot_camps[name]
 
-    connection = Fog::Compute.new({
+  def initialize(opts)
+
+    @credentials                = opts[:credentials]
+
+
+  end
+
+  def connect!(env = {})
+    @connection = Fog::Compute.new({
       :provider => 'AWS',
-      :aws_access_key_id => credentials[:id],
-      :aws_secret_access_key => credentials[:key],
-    })
-  end
+      :aws_access_key_id => @credentials [:access_id],
+      :aws_secret_access_key => @credentials [:secret_access_key],
+      })
 
-  def self.create_instance(env = {})
-    connection = connect(env)
-
-    if connection.key_pairs.get('sparta_tmp_kp')
-      connection.key_pairs.get('sparta_tmp_kp').destroy
-    end
-
-    key_pair = connection.key_pairs.create(:name => 'sparta_tmp_kp')
-    env[:key_pair] = key_pair
-
-    instance = connection.servers.create(env)
-    instance.wait_for { ready? }
-
-    begin
-      Timeout::timeout(360) do
-        begin
-          Timeout::timeout(8) do
-            Net::SSH.start(instance.public_ip_address, instance.username, {:key_data => key_pair.private_key}) do |ssh|
-              ssh.exec('pwd')
+      @instance = @connection.servers.bootstrap({:private_key_path => '~/.ssh/id_rsa', :public_key_path => '~/.ssh/id_rsa.pub'})
+      Sparta::BootCamp.running_instances << @instance
+      
+      puts "Launched instance."
+      args = @instance.ssh('ifconfig')
+      puts args.inspect
+=begin
+      begin
+        Timeout::timeout(60) do
+          begin
+            Timeout::timeout(20) do
+         
             end
+          rescue Errno::ECONNREFUSED
+            sleep(2)
+            retry
+          rescue Timeout::Error
+            retry
+          rescue Net::SSH::AuthenticationFailed
+            puts "Silly you."
           end
-        rescue Errno::ECONNREFUSED
-          sleep(2)
-          retry
-        rescue Net::SSH::AuthenticationFailed, Timeout::Error
-          retry
-        end
-      end
+        end 
 
-    rescue Timeout::Error
-      instance.destroy
-      raise "Timeout occured. Instance (#{instance.id}, #{self.name}) has been destroyed"
+      rescue Timeout::Error
+         @instance.destroy
+        raise "Timeout occured. Instance (#{@instance.id}, #{self.class.to_s}) has been destroyed"
+      end
+=end
+
     end
 
-    {
-      :id => instance.id,
-      :username => instance.username,
-      :private_key => key_pair.private_key,
-      :host => instance.public_ip_address
-    }
+    def self.destroy_instance(env = {})
+      connection = connect(env)
+      connection.servers.get(env[:id]).destroy
+    end
   end
-
-  def self.destroy_instance(env = {})
-    connection = connect(env)
-    connection.servers.get(env[:id]).destroy
-  end
-end
