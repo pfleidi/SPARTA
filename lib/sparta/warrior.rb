@@ -5,17 +5,17 @@ require 'net/ssh'
 
 module Sparta
   class Warrior
-    attr_reader :instance, :provider, :credentials
+    attr_reader :instance, :boot_camp, :credentials
 
     def initialize(env = {})
-      @provider = env[:provider]
+      @boot_camp = env[:boot_camp]
       @credentials = env[:credentials]
 
-      @instance = Providers.providers[@provider].create_instance(env)
+      @instance = BootCamp.boot_camps[@boot_camp].create_instance(env)
     end
 
     def kill
-      Providers.providers[@provider].destroy_instance({
+      BootCamp.boot_camps[@boot_camp].destroy_instance({
         :id => @instance[:id], 
         :credentials => @credentials
       })

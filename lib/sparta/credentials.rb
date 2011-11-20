@@ -3,8 +3,8 @@ require 'bundler/setup'
 
 module Sparta
   module Credentials
-    def self.providers
-      @providers ||= {}
+    def self.boot_camps
+      @boot_camps ||= {}
     end
   end
 end

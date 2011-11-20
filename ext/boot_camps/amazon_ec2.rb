@@ -3,13 +3,13 @@ require 'bundler/setup'
 
 require "fog"
 
-class AmazonEC2 < Sparta::Providers
+class AmazonEC2 < Sparta::BootCamp
 
   def self.connect(env = {})
     name = self.name.to_s.downcase.to_sym
 
     credentials = env[:credentials]
-    credentials ||= Sparta::Credentials.providers[name]
+    credentials ||= Sparta::Credentials.boot_camps[name]
 
     connection = Fog::Compute.new({
       :provider => 'AWS',
@@ -49,9 +49,10 @@ class AmazonEC2 < Sparta::Providers
 
     rescue Timeout::Error
       instance.destroy
+      raise "Timeout occured. Instance (#{instance.id}, #{self.name}) has been destroyed"
     end
 
-    return instance_data = {
+    {
       :id => instance.id,
       :username => instance.username,
       :private_key => key_pair.private_key,
