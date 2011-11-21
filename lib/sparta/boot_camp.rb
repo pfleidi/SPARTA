@@ -5,6 +5,13 @@ module Sparta
   class BootCamp
     attr_reader :connection
     attr_reader :ssh
+    attr_reader :credentials
+    
+    def initialize(credentials, options)
+      raise "Not Implemented in base class"
+    end
+    
+    
     def self.boot_camps
       @boot_camps ||= {}
     end
@@ -14,7 +21,10 @@ module Sparta
       raise 'Need an provider to instantiate bootcamp' unless provider
       className = boot_camps[provider]
       raise "Provider #{provider.to_s} is unknown." unless className
-      return className.new(opts)
+      
+      credentials = Sparta::Credentials.provide_for_provider(opts[:provider].downcase)
+      
+      return className.new(credentials, opts)
     end
     
     def ssh (args = [])

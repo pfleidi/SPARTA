@@ -8,4 +8,5 @@ group :test do
   gem "rcov"
   gem "test-unit"
   gem "mocha"
+  gem "net-netrc"
 end
