@@ -31,5 +31,9 @@ module Sparta
       end
     end
     
+    def is_working?
+      true
+    end
+    
   end
 end

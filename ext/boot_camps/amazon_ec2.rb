@@ -21,11 +21,10 @@ class AmazonEC2 < Sparta::BootCamp
     end
 
     def self.destroy_instance(env = {})
-      connection = connect(env)
-      connection.servers.get(env[:id]).destroy
+      @instance.destroy
     end
     
-    def ssh(command = [])
+    def ssh(command = "")
       @instance.ssh(command)
     end
   end

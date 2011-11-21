@@ -16,11 +16,10 @@ class WarriorTest < Test::Unit::TestCase
     mock_weapon = mock
     
     mock_weapon.expects(:install).with(@mock_ssh).in_sequence(@weapon_sequence)
-    mock_weapon.expects(:'is_working?').in_sequence(@weapon_sequence)
+    mock_weapon.expects(:'is_working?').returns(true).in_sequence(@weapon_sequence)
     mock_weapon.expects(:'use').in_sequence(@weapon_sequence)
     @warrior.arm(mock_weapon)
     assert(@warrior.is_armed?)
-    @warrior.expects(:'attack!')
     @warrior.attack!
     
   end

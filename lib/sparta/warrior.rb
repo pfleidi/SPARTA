@@ -21,7 +21,7 @@ module Sparta
     end
     
     def attack! 
-      @weapon.use
+      @weapon.use()
     end
   end
 end

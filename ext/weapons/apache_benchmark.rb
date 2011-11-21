@@ -1,5 +1,10 @@
-
-module ApacheBenchmark
+require 'weapon'
+class ApacheBenchmark < Sparta::Weapon
+  
+  def is_working?
+    
+  end
+  
   def dependencies
     {
       :'apt-get'=> 'apt-get update && apt-get install apache2-utils',
