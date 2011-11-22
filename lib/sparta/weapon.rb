@@ -1,8 +1,7 @@
 module Sparta
   class Weapon
     
-    def initialize(name)
-      return "foo"
+    def initialize()
     end
     
     def dependencies 
@@ -13,7 +12,7 @@ module Sparta
       @known_weapons  ||= {}
       clazz = @known_weapons[sym]
       if ( clazz )
-        return clazz.new
+        return clazz.new()
       end
     end
     
@@ -31,9 +30,38 @@ module Sparta
       end
     end
     
+    
     def is_working?
-      true
+      false
     end
+    
+    def command_is_available?(cmd)
+      @bootcamp.ssh(cmd)
+    end
+    
+    def install(instance)
+      @bootcamp = instance
+      if ( is_working? )
+        puts "already working."
+      else
+        provide_packages
+      end
+    end
+    
+    def provide_packages
+      @instance ||= nil
+      raise 'Need an instance here.' unless @instance
+      deps = self.dependencies
+      deps.each do |manager, command|
+        if ( @instance.ssh(command) )
+          puts "packet manager #{manager} worked. installed packages."
+          break
+        end
+      end
+    end
+    
+    
     
   end
 end
+Sparta::Weapon.load_weapons

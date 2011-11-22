@@ -1,14 +1,14 @@
 require 'helper'
 class WeaponTest < Test::Unit::TestCase
-
-def _basic
-  weapon = Sparta::Weapon.create_instance(:apache_benchmark)
-  assert_not_nil(weapon)
+  def test_initializer 
+     w =  Sparta::Weapon.new()
+    instance = mock
   
-  config = weapon.dependencies
-  assert(config.instance_of?(Hash))
+  end
   
-  
-end
+  def test_instances
+    w = Sparta::Weapon.create_instance(:apache_benchmark)
+    assert(w)
+  end
 
 end

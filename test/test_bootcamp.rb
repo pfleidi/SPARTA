@@ -9,6 +9,19 @@ class BootcampTest < Test::Unit::TestCase
     
   end
   
+  def test_initializer
+    assert_raise do
+      Sparta::BootCamp.new
+    end
+    assert_raise do
+      Sparta::BootCamp.new('foo')
+    end
+    
+    assert_raise  do
+      Sparta::BootCamp.new('foo', 'bar')
+    end
+  end
+  
   def test_credentials_from_netrc
     bootcamp = Sparta::BootCamp.create_instance(:provider => :AmazonEC2,     :options => { :ami_id => 'fufufufufu' })
     
@@ -16,7 +29,6 @@ class BootcampTest < Test::Unit::TestCase
   end
   
   def test_instance_creation
-    puts @bootcamp.inspect
     assert(@bootcamp.is_a?(Sparta::BootCamp))
   end
   
