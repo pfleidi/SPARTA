@@ -7,10 +7,9 @@ class IntegrationTest < Test::Unit::TestCase
     warrior = Sparta::Warrior.new(bootcamp)
     weapon = Sparta::Weapon.create_instance(:apache_benchmark)
     assert(warrior)
-    warrior.target = 'http://www.google.de/'
     assert(weapon)
     warrior.arm(weapon)
-    warrior.attack!
+    warrior.attack!('http://www.google.de/')
   end
 
 end
