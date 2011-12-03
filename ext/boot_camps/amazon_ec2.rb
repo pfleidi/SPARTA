@@ -18,9 +18,10 @@ class AmazonEC2 < Sparta::BootCamp
 
       @instance = @connection.servers.bootstrap({:private_key_path => '~/.ssh/id_rsa', :public_key_path => '~/.ssh/id_rsa.pub'})
       Sparta::BootCamp.running_instances << @instance
+      @instance.id
     end
 
-    def self.destroy_instance(env = {})
+    def kill!
       @instance.destroy
     end
     

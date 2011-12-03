@@ -14,7 +14,7 @@ module Sparta
           retry_count = env[:max_retry] || 0
 
           begin
-            @warriors << Warrior.new(env[:ssh])
+            @warriors << Warrior.new(env)
           rescue
             if retry_count > 0
               retry_count -= 1
