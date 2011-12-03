@@ -32,12 +32,6 @@ class BootcampTest < Test::Unit::TestCase
     assert(@bootcamp.is_a?(Sparta::BootCamp))
   end
   
-  def test_new_warrior
-    warrior = @bootcamp.new_warrior
-    assert_not_nil(warrior)
-    
-    assert(warrior.instance_of?(Sparta::Warrior))
-  end
   
   def test_can_haz_connection
     @bootcamp.connect!

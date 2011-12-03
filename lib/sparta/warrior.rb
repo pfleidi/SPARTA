@@ -1,31 +1,32 @@
 require 'rubygems'
 require 'bundler/setup'
-
 require 'net/ssh'
 
 module Sparta
   class Warrior   
     attr_accessor :state
-    attr_accessor :ssh
-    def initialize(conn)
-      @ssh = conn
+    attr_accessor :weapon
+    attr_accessor :bootcamp
+
+    def initialize(bootcamp_params = {})
+      @bootcamp = Sparta::BootCamp.create_instance(bootcamp_params)
     end
     
     def arm(weapon)
       @weapon = weapon
-      @weapon.install(@ssh)
+      @weapon.install(@bootcamp)
+      
       @weapon = nil unless @weapon.is_working?
-        
     end
     
     def is_armed?
       not @weapon.nil?
     end
     
-    def attack!(target)
+    def attack!(target, options={})
       raise "need a target!" unless target
-      raise "need a connection!" unless self.ssh
-      @weapon.use(target)
+      raise "need a connection!" unless self.bootcamp
+      @weapon.use(target, options)
     end
   end
 end

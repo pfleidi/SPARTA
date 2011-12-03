@@ -58,10 +58,7 @@ module Sparta
           break
         end
       end
-    end
-    
-    
-    
+    end  
   end
 end
 Sparta::Weapon.load_weapons
