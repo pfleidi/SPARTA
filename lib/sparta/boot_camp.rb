@@ -17,12 +17,12 @@ module Sparta
     end
 
     def self.create_instance(opts)
-      provider = opts[:provider].downcase
+      provider = opts[:provider].to_s.downcase
       raise 'Need an provider to instantiate bootcamp' unless provider
-      className = boot_camps[provider]
+      className = boot_camps[provider.to_s.downcase.to_sym]
       raise "Provider #{provider.to_s} is unknown." unless className
       
-      credentials = Sparta::Credentials.provide_for_provider(opts[:provider].downcase)
+      credentials = Sparta::Credentials.provide_for_provider(opts[:provider])
       
       return className.new(credentials, opts)
     end
@@ -32,6 +32,7 @@ module Sparta
     end
     
     def self.inherited(child)
+      puts "Loaded #{child}"
       bootcampName = child.name.to_s.downcase.to_sym
       self.boot_camps[bootcampName] = child
     end

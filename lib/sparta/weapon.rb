@@ -18,7 +18,6 @@ module Sparta
     
     def self.register(clazz, sym)
       @known_weapons ||= {}
-      puts clazz
       @known_weapons[sym] = clazz
     end
     
@@ -55,13 +54,11 @@ module Sparta
       deps.each do |manager, command|
         if ( @instance.ssh(command) )
           puts "packet manager #{manager} worked. installed packages."
+          raise "ERROR: Package still reported package as not working. Bailing out." unless self.is_working?
           break
         end
       end
-    end
-    
-    
-    
+    end  
   end
 end
 Sparta::Weapon.load_weapons

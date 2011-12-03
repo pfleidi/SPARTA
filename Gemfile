@@ -4,6 +4,7 @@ gem "fog"
 gem "sshkey"
 
 group :test do
+  gem "rake"
   gem "cucumber"
   gem "rcov"
   gem "test-unit"
