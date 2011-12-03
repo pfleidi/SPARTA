@@ -1,15 +1,14 @@
 require 'helper'
 
 class IntegrationTest < Test::Unit::TestCase
+
+  include Sparta
+
   def test_warrior_and_bootcamp
-    bootcamp = Sparta::BootCamp.create_instance(:provider => :localprovider)
-    assert(bootcamp)
-    warrior = Sparta::Warrior.new(bootcamp)
-    weapon = Sparta::Weapon.create_instance(:apache_benchmark)
-    assert(warrior)
-    assert(weapon)
+    warrior = Warrior.new(:provider => :localprovider)
+    weapon = Weapon.create_instance(:apache_benchmark)
     warrior.arm(weapon)
-    warrior.attack!('http://www.google.de/')
+    warrior.attack!('http://www.google.de/', { :requests => 100, :clients => 20 })
   end
 
 end
