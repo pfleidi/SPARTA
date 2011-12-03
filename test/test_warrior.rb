@@ -22,13 +22,9 @@ class WarriorTest < Test::Unit::TestCase
     @warrior.arm(mock_weapon)
     assert(@warrior.is_armed?)
     
-    # needs a target!
-    assert_raise do
-      @warrior.attack!
-    end
     
-    @warrior.target = 'http://localhost/'
-    @warrior.attack!
+    @target = 'http://localhost/'
+    @warrior.attack!(@target)
   end
   
 

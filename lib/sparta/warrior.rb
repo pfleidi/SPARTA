@@ -7,7 +7,6 @@ module Sparta
   class Warrior   
     attr_accessor :state
     attr_accessor :ssh
-    attr_accessor :target 
     def initialize(conn)
       @ssh = conn
     end
@@ -23,8 +22,8 @@ module Sparta
       not @weapon.nil?
     end
     
-    def attack! 
-      raise "need a target!" unless self.target
+    def attack!(target)
+      raise "need a target!" unless target
       raise "need a connection!" unless self.ssh
       @weapon.use(target)
     end
