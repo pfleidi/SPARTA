@@ -1,70 +1,128 @@
 <!DOCTYPE html>
 <head>
 	<title>SPARTA!</title>
+	<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
 	
-	<style type="text/css">
-		* {
-			font-family: Serif;
-			font-size:13pt;
-			line-height:1.3em;
-		}
-		
-		#column {
-			margin:10px auto;
-			width:700px;
-		}
+	<style type="text/css" media="screen">
+		body {
+        padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
+      }
+
+      /* Page header tweaks */
+      .page-header {
+        background-color: #f5f5f5;
+        padding: 20px 20px 10px;
+        margin: -20px -20px 20px;
+      }
+      .container {
+        width: 820px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
+      }
+
+      /* The white background content wrapper */
+      .content {
+        background-color: #fff;
+        padding: 20px;
+        margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+        -webkit-border-radius: 0 0 6px 6px;
+           -moz-border-radius: 0 0 6px 6px;
+                border-radius: 0 0 6px 6px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                box-shadow: 0 1px 2px rgba(0,0,0,.15);
+      }
 	</style>
 </head>
 <body>
-	<div id="column">
-<h1 id="sparta_system_performance_analysis_ready_to_advance">SPARTA - System Performance Analysis Ready To Advance</h1>
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="#">SPARTA</a>
+          <ul class="nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+          
+        </div>
+      </div>
+    </div>
+  <div class="container">
 
-<p>Sparta is a load-testing tool running your favorite test-tools from the cloud.</p>
+    <div class="content">
+      <div class="page-header">
+        <h1>SPARTA <small>System Performance Analysis <em>Ready To Advance</em></small></h1>
+      </div>
 
-<ul>
-<li>scriptable load-tests using a simple DSL</li>
-<li>fully automated setup of cloud instances at providers of your choice </li>
-<li>easy integration of load-testing tools you already use</li>
-<li>graphical presentation of testing results</li>
-</ul>
+	<p>Sparta is a load-testing tool running your favorite test-tools from the cloud.</p>
 
-<p>Install dependencies with <a href="https://github.com/carlhuda/bundler/">bundler</a>:
-    bundle install</p>
+	<ul>
+	<li>scriptable load-tests using a simple DSL</li>
+	<li>fully automated setup of cloud instances at providers of your choice </li>
+	<li>easy integration of load-testing tools you already use</li>
+	<li>graphical presentation of testing results</li>
+	</ul>
 
-<h2 id="getting_started">Getting Started</h2>
+	<p>Install dependencies with <a href="https://github.com/carlhuda/bundler/">bundler</a>:
+	    bundle install</p>
 
-<p>To get started you will need an account at one of the supported cloud computing providers:</p>
+	<h2 id="getting_started">Getting Started</h2>
 
-<ul>
-<li>AmazonEC2</li>
-<li>Rackspace</li>
-<li>tbd.</li>
-</ul>
+	<p>To get started you will need an account at one of the supported cloud computing providers:</p>
 
-<p>Adding the API credentials you received from the provider of your choice to the local configuration <code>config/credentials.yaml</code> or <code>~/.netrc</code> will make your scripts cleaner and more portable. Nevertheless, credentials can also be included in scripts where needed to override default credentials in both files above.</p>
+	<ul>
+	<li>AmazonEC2</li>
+	<li>Rackspace</li>
+	<li>tbd.</li>
+	</ul>
 
-<h3 id="warriors">Warriors</h3>
+	<p>Adding the API credentials you received from the provider of your choice to the local configuration <code>config/credentials.yaml</code> or <code>~/.netrc</code> will make your scripts cleaner and more portable. Nevertheless, credentials can also be included in scripts where needed to override default credentials in both files above.</p>
 
-<h3 id="squads">Squads</h3>
+	<h3 id="installing_sparta">Installing Sparta</h3>
 
-<h2 id="contributors">Contributors</h2>
+	<p>To install sparta, simply install the gem.</p>
 
-<p>In no specific order, starting with the most important ones:</p>
+	<pre><code>gem install sparta</code></pre>
 
-<ul>
-<li>Sven Pfleiderer (<a href="https://github.com/pfleidi">pfleidi</a>)</li>
-<li>Moritz Haarmann (<a href="https://github.com/moritzh">moritzh</a>)</li>
-<li>Dominik Huebner (<a href="https://github.com/yeahiii">yeahiii</a>)</li>
-</ul>
+	<h2 id="building_blocks">Building Blocks</h2>
 
-<p>We are building SPARTA using a fine selection of great ingredients:</p>
+	<h3 id="warriors">Warriors</h3>
 
-<ul>
-<li>cucumber</li>
-<li>rcov</li>
-<li>test-unit</li>
-<li>mocha</li>
-<li>net-netrc</li>
-</ul>
+	<p>Warriors are the basic testing blocks. They handle both the connection, i.e. the instance they are using to run the test, as well as the weapon, which is a means of running a test. The coordination of those blocks is done by the warrior. The API is quite simple, for instance, this snippet will create a new warrior that performs an ApacheBenchmark test from an EC2 instance.</p>
+
+	<script src="https://gist.github.com/1427439.js?file=gistfile1.rb"></script>
+
+	<p>That will launch a micro instance, equip the instance with the necessary tools and execute the given tests. The results will be collected ( in form of a CSV-Logfile ) and provided for further analysis of the data.</p>
+
+	<p>Since warriors are a bit weak to test bigger setups, Squads are a way to configure and control groups of warriors to do something.</p>
+
+	<h3 id="squads">Squads</h3>
+
+	<p>Squads are a thin management layer above warriors. They provide no testing functionality that is not existing in the warriors or weapons, but ae extremely convinient when it comes to assemble larger groups of warriors and coordinate their attacks. </p>
+
+	<p>Squads are WIP and a example will be provided as soon as they are ready for prime time.</p>
+
+	<h2 id="contributors">Contributors</h2>
+
+	<p>In no specific order:</p>
+
+	<ul>
+	<li>Sven Pfleiderer (<a href="https://github.com/pfleidi">pfleidi</a>)</li>
+	<li>Moritz Haarmann (<a href="https://github.com/moritzh">moritzh</a>)</li>
+	<li>Dominik Huebner (<a href="https://github.com/yeahiii">yeahiii</a>)</li>
+	</ul>
+
+	<p>We are building SPARTA using a fine selection of great ingredients:</p>
+
+	<ul>
+	<li>cucumber</li>
+	<li>rcov</li>
+	<li>test-unit</li>
+	<li>mocha</li>
+	<li>net-netrc</li>
+	</ul>
+
+	<p>Sparta is a academic project at the Stuttgart Media University.</p>
+
+</div>
 </div>
 </body>
