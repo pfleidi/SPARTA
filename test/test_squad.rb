@@ -3,65 +3,45 @@ require 'helper'
 class SquadTest < Test::Unit::TestCase
 
   def setup
-    @enemy = "http://xerxes.com"
-    @squad = Sparta::Squad.new
+    @mock_weapon = mock
+    @mock_ssh = mock
+
+    @mock_weapon.stubs(:install)
+    @mock_weapon.stubs(:'is_working?').returns(true)
   end
 
-  def test_adding_warrior
-    assert_equal(@squad.size, 0)
-    5.times { @squad.recruit(mock) }
-    assert_equal(@squad.size, 5)
+  def test_creating_squad
+    squad = Sparta::Squad.new(3,{:provider => :localprovider})
+    assert_equal 3, squad.warriors.length
   end
 
-  def test_removing_warrior
-    assert_equal(@squad.size, 0)
-    @squad.recruit(mock)
-    warrior = mock
-    @squad.recruit(warrior)
-    assert_equal(@squad.size, 2)
-    @squad.dismiss(warrior)
-    assert_equal(@squad.size, 1)
-  end
-
-  def test_engage_normal_battle
-    5.times do
-      warrior = mock
-      warrior.expects(:attack).with(@enemy).once
-      @squad.recruit(warrior)
+  def test_creating_squad_failing_warrior
+    Sparta::Warrior.stubs(:new).raises(StandardError, 'warrior failed')
+    
+    assert_raise RuntimeError do
+      squad = Sparta::Squad.new(3,{:provider => :localprovider})
     end
-
-    @squad.engage_battle(:with => @enemy) 
   end
 
-  def test_engage_strategic_battle
-    opts = { :attack => 100, :concurrent_hits => 20 }
-
-    3.times do
-      warrior = mock
-      warrior.expects(:attack).with(@enemy, opts).once
-      @squad.recruit(warrior)
-    end
-
-    @squad.add_strategy(opts)
-    @squad.engage_battle(:with => @enemy) 
+  def test_removing_squad
+    squad = Sparta::Squad.new(3,{:provider => :localprovider})
+    squad.kill
+    assert squad.warriors.empty?
   end
 
-  def test_engage_multi_strategy_battle
-    opts1 = { :attack => 100, :concurrent_hits => 20 }
-    opts2 = { :attack => 500, :concurrent_hits => 40 }
-    battle = sequence('really hard battle')
+  def test_arm_squad
+    squad = Sparta::Squad.new(3,{:provider => :localprovider})
+    puts squad.warriors.inspect
+    squad.arm(@mock_weapon)
 
-    4.times do
-      warrior = mock
-      warrior.expects(:attack).with(@enemy, opts1).in_sequence(battle)
-      warrior.expects(:attack).with(@enemy, opts2).in_sequence(battle)
-      @squad.recruit(warrior)
-    end
-
-    @squad.add_strategy(opts1)
-    @squad.add_strategy(opts2)
-    @squad.engage_battle(:with => @enemy) 
+    assert_equal false, squad.warriors.collect { |w| w.is_armed? }.include?(false)
   end
 
+  def test_is_armed
+    squad = Sparta::Squad.new(3,{:provider => :localprovider})
 
+    squad.arm(@mock_weapon)
+
+    assert squad.is_armed?
+  end
 end

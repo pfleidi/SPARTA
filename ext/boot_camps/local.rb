@@ -26,4 +26,8 @@ class LocalProvider < Sparta::BootCamp
       error = temp_err.string
       [actual,error]
   end
+
+  def kill!
+
+  end
 end
