@@ -1,64 +1,57 @@
 module Sparta
   class Weapon
-    
-    def initialize()
-    end
-    
-    def dependencies 
-      {:foo=>'bar'}
-    end
-    
-    def self.create_instance(sym)
-      @known_weapons  ||= {}
-      clazz = @known_weapons[sym]
-      if ( clazz )
+
+    def self.create(weapon_name)
+      clazz = weapons[weapon_name]
+
+      if clazz.nil?
+        raise "Weapon #{weapon_name} does not exist!"
+      else 
         return clazz.new()
       end
     end
-    
-    def self.register(clazz, sym)
-      @known_weapons ||= {}
-      @known_weapons[sym] = clazz
+
+    def self.weapons
+      @weapons ||= {}
     end
-    
-    def self.load_weapons
+
+    def self.inherited(child)
+      weapon_name = child.name.to_s.to_sym
+      self.weapons[weapon_name] = child
+    end
+
+    def self.load
       path = "ext/weapons"
       $LOAD_PATH.unshift(path)
-      Dir[File.join(path, "*.rb")].each do |bootcamp|
-        require File.basename(bootcamp)
+      Dir[File.join(path, "*.rb")].each do |weapon|
+        require File.basename(weapon)
       end
     end
-    
-    
+
+    def install(bootcamp)
+      @bootcamp = bootcamp
+      provide_packages unless is_working?
+    end
+
+    def use(target, options = {})
+      @bootcamp.ssh(usage_description(target, options))
+    end
+
     def is_working?
-      false
+      not @bootcamp.ssh(test_description).nil?
     end
     
-    def command_is_available?(cmd)
-      @bootcamp.ssh(cmd)
-    end
-    
-    def install(instance)
-      @bootcamp = instance
-      if ( is_working? )
-        puts "already working."
-      else
-        provide_packages
-      end
-    end
-    
+    private
+
     def provide_packages
-      @instance ||= nil
-      raise 'Need an instance here.' unless @instance
-      deps = self.dependencies
-      deps.each do |manager, command|
-        if ( @instance.ssh(command) )
-          puts "packet manager #{manager} worked. installed packages."
-          raise "ERROR: Package still reported package as not working. Bailing out." unless self.is_working?
-          break
+      package_description.each do |manager, command|
+        if @bootcamp.ssh(command)
+          raise "ERROR: Package still reported package as not working. Bailing out." unless is_working?
         end
       end
-    end  
+    end
   end
+
+  Weapon.load
 end
-Sparta::Weapon.load_weapons
+
