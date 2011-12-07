@@ -2,6 +2,8 @@ require 'rubygems'
 require 'bundler/setup'
 require 'net/ssh'
 
+require 'timeout'
+
 module Sparta
   class Warrior   
     attr_accessor :state
@@ -9,8 +11,14 @@ module Sparta
     attr_accessor :bootcamp
 
     def initialize(bootcamp_params = {})
-      @bootcamp = Sparta::BootCamp.create_instance(bootcamp_params)
-      @bootcamp.connect!
+      begin
+        Timeout::timeout(360) do
+          @bootcamp = Sparta::BootCamp.create_instance(bootcamp_params)
+          @bootcamp.connect!
+        end
+      rescue
+        raise "Warrior initialization failed"
+      end
     end
 
     def arm(weapon)
