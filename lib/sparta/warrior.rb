@@ -41,5 +41,9 @@ module Sparta
     def kill
       @bootcamp.kill!
     end
+
+    def ssh(command = "")
+      @bootcamp.ssh(command)
+    end
   end
 end
