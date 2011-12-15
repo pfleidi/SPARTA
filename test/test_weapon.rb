@@ -32,13 +32,36 @@ class WeaponTest < Test::Unit::TestCase
     @weapon.use(use_target, use_opts)
   end
 
-  def mock_install
+  def test_install_fail
+    bootcamp = mock_install(nil)
+
+    assert_raise(RuntimeError) do
+      @weapon.install(bootcamp)
+    end
+  end
+
+  def test_creation_fail
+    assert_raise(RuntimeError) do
+      @weapon = Weapon.create(:WeaponDoesNotExist)
+    end
+  end
+
+  def mock_install(success_return = {})
     bootcamp = mock
     seq = sequence('loading weapon')
     bootcamp.expects(:ssh).with(@weapon.test_description).returns(nil).in_sequence(seq)
+
     @weapon.package_description.each do |manager, command|
-      bootcamp.expects(:ssh).with(command).returns({}).in_sequence(seq)
-      bootcamp.expects(:ssh).with(@weapon.test_description).returns({}).in_sequence(seq)
+
+      if manager == :pacman
+        bootcamp.expects(:ssh).with(command).returns({}).in_sequence(seq)
+        bootcamp.expects(:ssh).with(@weapon.test_description).returns(success_return).in_sequence(seq)
+        done = true
+      else
+        bootcamp.expects(:ssh).with(command).returns(nil).in_sequence(seq)
+      end
+
+      break if done
     end
 
     bootcamp
