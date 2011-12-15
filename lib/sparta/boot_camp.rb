@@ -3,15 +3,12 @@ require 'bundler/setup'
 
 module Sparta
   class BootCamp
-    attr_reader :connection
-    attr_reader :ssh
     attr_reader :credentials
-    
+
     def initialize(credentials, options)
       raise "Not Implemented in base class"
     end
-    
-    
+
     def self.boot_camps
       @boot_camps ||= {}
     end
@@ -21,16 +18,20 @@ module Sparta
       raise 'Need an provider to instantiate bootcamp' unless provider
       className = boot_camps[provider.to_s.downcase.to_sym]
       raise "Provider #{provider.to_s} is unknown." unless className
-      
+
       credentials = Sparta::Credentials.provide_for_provider(opts[:provider])
-      
+
       return className.new(credentials, opts)
     end
-    
-    def ssh (args = [])
-      @connection.ssh(args) 
+
+    def ssh(command)
+      puts "Executing command: #{command}"
+      output = @instance.ssh(command)
+      puts "Output of command: #{output.first.stdout}" if output.kind_of?(Array)
+
+      !output.nil?
     end
-    
+
     def self.inherited(child)
       puts "Loaded #{child}"
       bootcampName = child.name.to_s.downcase.to_sym
@@ -44,25 +45,22 @@ module Sparta
         require File.basename(bootcamp)
       end
     end
-    
+
     def self.running_instances
       @running_instances ||= []
     end
-    
+
     def self.killall
       running_instances.each do |victim|
         victim.destroy
       end
     end
-    
-    def new_warrior
-      return Sparta::Warrior.new(@ssh)
-    end
-    
+
     def connect!
       raise "Not implemented in base class."
     end
   end
+
+  BootCamp.load_boot_camps
 end
 
-Sparta::BootCamp.load_boot_camps

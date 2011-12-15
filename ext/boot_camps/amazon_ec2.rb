@@ -33,7 +33,4 @@ class AmazonEC2 < Sparta::BootCamp
     @instance.destroy
   end
 
-  def ssh(command = "")
-    @instance.ssh(command)
-  end
 end
