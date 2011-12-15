@@ -14,6 +14,7 @@ module Sparta
           retry_count = env[:max_retry] || 0
 
           begin
+            puts env
             @warriors << Warrior.new(env)
           rescue
             if retry_count > 0

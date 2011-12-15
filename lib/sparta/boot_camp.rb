@@ -20,7 +20,6 @@ module Sparta
       raise "Provider #{provider.to_s} is unknown." unless className
 
       credentials = Sparta::Credentials.provide_for_provider(opts[:provider])
-
       return className.new(credentials, opts)
     end
 
