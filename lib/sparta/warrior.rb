@@ -38,7 +38,7 @@ module Sparta
       @weapon.use(target, options)
     end
 
-    def kill
+    def kill!
       @bootcamp.kill!
     end
   end

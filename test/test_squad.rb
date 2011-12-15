@@ -25,7 +25,7 @@ class SquadTest < Test::Unit::TestCase
 
   def test_removing_squad
     squad = Sparta::Squad.new(3,{:provider => :localprovider})
-    squad.kill
+    squad.kill!
     assert squad.warriors.empty?
   end
 

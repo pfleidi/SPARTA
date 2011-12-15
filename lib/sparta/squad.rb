@@ -50,8 +50,8 @@ module Sparta
       @warrior.each { |warrior| warrior.attack! }
     end
 
-    def kill
-      @warriors.each { |warrior| warrior.kill }
+    def kill!
+      @warriors.each { |warrior| warrior.kill! }
       @warriors.clear
     end
   end
