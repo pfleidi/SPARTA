@@ -20,7 +20,7 @@ module Sparta
       self.weapons[weapon_name] = child
     end
 
-    def self.load
+    def self.load!
       path = "ext/weapons"
       $LOAD_PATH.unshift(path)
       Dir[File.join(path, "*.rb")].each do |weapon|
@@ -46,12 +46,16 @@ module Sparta
     def provide_packages
       package_description.each do |manager, command|
         if @bootcamp.ssh(command)
-          raise "ERROR: Package still reported package as not working. Bailing out." unless is_working?
+          if is_working?
+            break
+          else
+            raise "ERROR: Package installed but still not working. Bailing out."
+          end
         end
       end
     end
   end
 
-  Weapon.load
+  Weapon.load!
 end
 
