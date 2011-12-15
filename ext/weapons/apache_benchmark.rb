@@ -6,8 +6,8 @@ class ApacheBenchmark < Sparta::Weapon
 
   def package_description
     {
-      :'apt-get'=> 'apt-get update && apt-get install apache2-utils',
-      :pacman => 'pacman -Sy apache',
+      :'apt-get'=> 'apt-get update && apt-get install apache2-utils --force-yes --yes',
+      :pacman => 'pacman -Sy apache --noconfirm',
       :yum => 'init 0'
     }
   end
