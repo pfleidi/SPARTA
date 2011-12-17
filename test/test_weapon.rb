@@ -1,7 +1,6 @@
 require 'helper'
 
 class WeaponTest < Test::Unit::TestCase
-
   include Sparta
 
   def setup
@@ -23,7 +22,7 @@ class WeaponTest < Test::Unit::TestCase
   end
 
   def test_use
-    use_target = "http://xerxes.com" 
+    use_target = "http://xerxes.com"
     use_opts = { :requests => 100, :clients => 20 }
     bootcamp = mock_install
 
@@ -33,7 +32,7 @@ class WeaponTest < Test::Unit::TestCase
   end
 
   def test_install_fail
-    bootcamp = mock_install(nil)
+    bootcamp = mock_install(stub('fakeResult', :status => 127))
 
     assert_raise(RuntimeError) do
       @weapon.install(bootcamp)
@@ -46,22 +45,27 @@ class WeaponTest < Test::Unit::TestCase
     end
   end
 
-  def mock_install(success_return = {})
+  def mock_install(success_return = stub('fakeResult', :status => 0))
     bootcamp = mock
     seq = sequence('loading weapon')
-    bootcamp.expects(:ssh).with(@weapon.test_description).returns(nil).in_sequence(seq)
+    bootcamp.expects(:ssh).with(@weapon.test_description).returns(
+      stub('fakeResult', :status => 127)
+    ).in_sequence(seq)
 
     @weapon.package_description.each do |manager, command|
 
       if manager == :pacman
-        bootcamp.expects(:ssh).with(command).returns({}).in_sequence(seq)
-        bootcamp.expects(:ssh).with(@weapon.test_description).returns(success_return).in_sequence(seq)
-        done = true
-      else
-        bootcamp.expects(:ssh).with(command).returns(nil).in_sequence(seq)
-      end
+        bootcamp.expects(:ssh).with(command).returns(
+          stub("fakeResult", :status => 0)
+        ).in_sequence(seq)
 
-      break if done
+        bootcamp.expects(:ssh).with(@weapon.test_description).returns(success_return).in_sequence(seq)
+        break
+      else
+        bootcamp.expects(:ssh).with(command).returns(
+          stub('fakeResult', :status => 127)
+        ).in_sequence(seq)
+      end
     end
 
     bootcamp
