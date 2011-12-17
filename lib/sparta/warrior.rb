@@ -14,18 +14,25 @@ module Sparta
       begin
         Timeout::timeout(360) do
           @bootcamp = Sparta::BootCamp.create_instance(bootcamp_params)
-          @bootcamp.connect!
+          @instance_id = @bootcamp.connect!
         end
       rescue
         raise "Warrior initialization failed"
       end
     end
-
+    
     def arm(weapon)
       @weapon = weapon
       @weapon.install(@bootcamp)
-
-      @weapon = nil unless @weapon.is_working?
+      
+      if(@weapon.is_working?)
+        begin
+          @bootcamp.add_tag('weapon', weapon.class.name)
+        rescue
+        end
+      else
+        @weapon = nil
+      end
     end
 
     def is_armed?

@@ -23,7 +23,8 @@ class AmazonEC2 < Sparta::BootCamp
 
     @instance = @connection.servers.bootstrap(
       :private_key_path => '~/.ssh/id_rsa',
-      :public_key_path  => '~/.ssh/id_rsa.pub'
+      :public_key_path  => '~/.ssh/id_rsa.pub',
+      :tags => {:sparta_session_id => Sparta::session_uuid}
     )
     Sparta::BootCamp.running_instances << @instance
 
@@ -34,4 +35,7 @@ class AmazonEC2 < Sparta::BootCamp
     @instance.destroy
   end
 
+  def add_tag(key, value)
+    tag = @connection.tags.create(:resource_id => @instance.id, :key => key, :value => value)
+  end
 end

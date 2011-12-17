@@ -1,6 +1,7 @@
 
 # Rubygems
 require 'rubygems'
+require 'SecureRandom'
 
 # Internal requires
 
@@ -12,4 +13,8 @@ require 'sparta/credentials'
 
 module Sparta
   VERSION = "0.0.1"
+  
+  def self.session_uuid
+    @session_uuid ||= SecureRandom.uuid
+  end
 end
