@@ -16,17 +16,9 @@ class LocalProvider < Sparta::BootCamp
 
   def ssh(command)
     # some redirection here..
-    temp_out = StringIO.new
-    temp_err = StringIO.new
-    old_stdout, $stdout = $stdout, temp_out
-    old_stderr, $stderr = $stderr, temp_err
-    system(command)
-    $stdout = old_stdout
-    $stderr = old_stderr
-    actual = temp_out.string
-    error = temp_err.string
-
+    actual = `#{command}`
     result = Fog::SSH::Result.new(command)
+    result.stdout = actual
     result.status = 0
 
     result

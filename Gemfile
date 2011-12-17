@@ -12,4 +12,5 @@ group :test do
   gem "net-netrc"
   gem "gruff"
   gem "rmagick"
+  gem "nokogiri"
 end

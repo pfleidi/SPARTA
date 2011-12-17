@@ -1,6 +1,36 @@
 module Sparta
   class Weapon
-
+    class Result
+      attr_accessor :failed_transactions,:successful_transactions
+      attr_accessor :concurrency
+      attr_accessor :num_requests
+      attr_accessor :response_time
+      attr_accessor :longest_transaction
+      attr_accessor :target
+      attr_accessor :throughput # bytes
+      
+      def merge
+        
+      end
+      
+      def merge!
+        
+      end
+    end
+    
+    def result_file
+      raise "not implemented in base class"
+    end
+    
+    def retrieve_results
+      @result_contents = @bootcamp.dump_file(result_file)
+    end
+    
+    def create_result
+      raise "Not Implemented in base class"
+    end
+    
+    
     def self.create(weapon_name)
       clazz = weapons[weapon_name]
 
@@ -14,7 +44,12 @@ module Sparta
     def self.weapons
       @weapons ||= {}
     end
-
+    
+    # returns the result of the test
+    def result
+      raise "not implemented in base class"
+    end
+    
     def self.inherited(child)
       weapon_name = child.name.to_s.to_sym
       self.weapons[weapon_name] = child
@@ -34,6 +69,7 @@ module Sparta
     end
 
     def use(target, options = {})
+      
       @bootcamp.ssh(usage_description(target, options))
     end
 
