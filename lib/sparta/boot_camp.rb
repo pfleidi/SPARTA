@@ -25,7 +25,7 @@ module Sparta
 
     def ssh(command)
       puts "Executing command: #{command}"
-      output = @instance.ssh(command)
+      output = @instance.ssh(command)[0]
       puts output.inspect
       puts "Output of command: #{output.first.stdout}" if output.kind_of?(Array)
 
