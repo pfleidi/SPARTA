@@ -26,9 +26,10 @@ module Sparta
     def ssh(command)
       puts "Executing command: #{command}"
       output = @instance.ssh(command)
+      puts output.inspect
       puts "Output of command: #{output.first.stdout}" if output.kind_of?(Array)
 
-      !output.nil?
+      output
     end
 
     def self.inherited(child)
