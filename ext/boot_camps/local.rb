@@ -1,4 +1,5 @@
 require "fog"
+require "open3"
 
 class LocalProvider < Sparta::BootCamp
 
@@ -15,11 +16,12 @@ class LocalProvider < Sparta::BootCamp
   end
 
   def ssh(command)
-    # some redirection here..
-    actual = `#{command}`
     result = Fog::SSH::Result.new(command)
-    result.stdout = actual
-    result.status = 0
+
+    stdin, stdout, stderr = Open3.popen3(command)
+    result.stdout = stdout.readlines.join("")
+    result.stderr = stderr.readlines.join("")
+    result.status = $?.to_i
 
     result
   end
