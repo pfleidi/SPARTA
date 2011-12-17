@@ -6,7 +6,7 @@ module Sparta
 
       if clazz.nil?
         raise "Weapon #{weapon_name} does not exist!"
-      else 
+      else
         return clazz.new()
       end
     end
@@ -38,14 +38,15 @@ module Sparta
     end
 
     def is_working?
-      not @bootcamp.ssh(test_description).nil?
+      @bootcamp.ssh(test_description).status == 0
     end
-    
+
     private
 
     def provide_packages
       package_description.each do |manager, command|
-        if @bootcamp.ssh(command)
+        result = @bootcamp.ssh(command)
+        if result.status == 0
           if is_working?
             break
           else
