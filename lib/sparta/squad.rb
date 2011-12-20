@@ -1,5 +1,3 @@
-require './lib/sparta/warrior'
-
 module Sparta
   class Squad
     attr_reader :warriors

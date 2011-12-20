@@ -26,10 +26,19 @@ module Sparta
     def ssh(command)
       puts "Executing command: #{command}"
       output = @instance.ssh(command)[0]
-      puts output.inspect
-      puts "Output of command: #{output.first.stdout}" if output.kind_of?(Array)
+      puts "Output of command: #{output.stdout}" 
 
       output
+    end
+    
+    # dumps a remote file and returns the contents.
+    def dump_file(file)
+      res = ssh("cat #{file}")
+      if ( res.stdout )
+        res.stdout
+      else
+        nil
+      end
     end
 
     def self.inherited(child)

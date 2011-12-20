@@ -44,6 +44,16 @@ class WeaponTest < Test::Unit::TestCase
       @weapon = Weapon.create(:WeaponDoesNotExist)
     end
   end
+  
+  def test_retrieve_asets
+    @warrior = Sparta::Warrior.new({:provider=>'localprovider'})
+    @weapon = Weapon.create(:ApacheBenchmark)
+    @warrior.arm(@weapon)
+    @warrior.attack!("http://momo.brauchtman.net/")
+    @weapon.retrieve_results
+    result = @weapon.result
+    
+  end
 
   def mock_install(success_return = stub('fakeResult', :status => 0))
     bootcamp = mock
