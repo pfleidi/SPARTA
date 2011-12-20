@@ -31,7 +31,6 @@ class SquadTest < Test::Unit::TestCase
 
   def test_arm_squad
     squad = Sparta::Squad.new(3,{:provider => :localprovider})
-    puts squad.warriors.inspect
     squad.arm(@mock_weapon)
 
     assert_equal false, squad.warriors.collect { |w| w.is_armed? }.include?(false)
@@ -43,5 +42,19 @@ class SquadTest < Test::Unit::TestCase
     squad.arm(@mock_weapon)
 
     assert squad.is_armed?
+  end
+
+  def test_attack
+    squad = Sparta::Squad.new(3,{:provider => 'localprovider'})
+    @mock_weapon.expects(:use).at_least_once
+    squad.arm(@mock_weapon)
+    squad.attack!
+  end
+
+  def test_attack_ramp_up
+    squad = Sparta::Squad.new(30,{:provider => 'localprovider'})
+    @mock_weapon.expects(:use).at_least_once
+    squad.arm(@mock_weapon)
+    squad.attack!(:ramp_up => {:period => 10})
   end
 end

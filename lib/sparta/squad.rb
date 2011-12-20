@@ -6,7 +6,10 @@ module Sparta
 
     def initialize(count, env = {})
       @warriors = []
+      add_warriors(count, env)
+    end
 
+    def add_warriors(count, env = {})
       threads = []
 
       (0 ... count).each do |number|
@@ -14,7 +17,6 @@ module Sparta
           retry_count = env[:max_retry] || 0
 
           begin
-            puts env
             @warriors << Warrior.new(env)
           rescue
             if retry_count > 0
@@ -31,6 +33,7 @@ module Sparta
       threads.each do |t|
         t.join
       end
+
     end
 
     def arm(weapon)
@@ -47,8 +50,20 @@ module Sparta
       return true
     end
 
-    def attack!
-      @warrior.each { |warrior| warrior.attack! }
+    def attack!(env = {})
+      if(env[:ramp_up])
+        ramp_up_time = env[:ramp_up][:period]
+        raise "Squad attack ramp up: period missing" unless ramp_up_time
+
+        ramp_up_function = env[:ramp_up][:function] || :linear
+
+        if ramp_up_function == :linear
+          delays = Array.new(@warriors.size){ramp_up_time / @warriors.size}
+          @warriors.each_with_index { |warrior,index| warrior.attack!('http://localhost/'); sleep(delays[index]); puts 'attacking' }
+        end
+      else
+        @warriors.each { |warrior| warrior.attack!('http://localhost') }
+      end
     end
 
     def kill!
