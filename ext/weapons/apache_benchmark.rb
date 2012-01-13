@@ -12,14 +12,14 @@ class ApacheBenchmark < Sparta::Weapon
   
   def result
     matching = {"Concurrency Level"=>:concurrency, "Failed requests:"=>:failed_transactions, 
-        "Transfer rate:"=>:throughput, "Complete requests:" =>:successful_transactions, ""}
+        "Transfer rate:"=>:throughput, "Complete requests:" =>:successful_transactions}
     html = Nokogiri::HTML(@result_contents)
     html.xpath('//th')
   end
 
   def package_description
     {
-      :'apt-get'=> 'apt-get update && apt-get install apache2-utils --force-yes --yes',
+      :'apt-get'=> 'sudo bash -c "apt-get update && apt-get install apache2-utils --force-yes --yes"',
       :pacman => 'pacman -Sy apache --noconfirm',
       :yum => 'init 0'
     }
