@@ -31,7 +31,7 @@ class ApacheBenchmark < Sparta::Weapon
     clients ||= 5
     requests ||= 50
 
-    "ab -w -k -n #{requests} -c #{clients} #{target} > out.html"
+    "ab -k -n #{requests} -c #{clients} #{target} > out.html"
   end
 
   def parse(output)
