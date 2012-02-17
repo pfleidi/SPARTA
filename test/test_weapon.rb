@@ -49,7 +49,7 @@ class WeaponTest < Test::Unit::TestCase
     @warrior = Sparta::Warrior.new({:provider=>'localprovider'})
     @weapon = Weapon.create(:ApacheBenchmark)
     @warrior.arm(@weapon)
-    @warrior.attack!("http://momo.brauchtman.net/")
+    @warrior.attack("http://momo.brauchtman.net/")
     @weapon.retrieve_results
     result = @weapon.result
     

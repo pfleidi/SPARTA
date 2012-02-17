@@ -24,7 +24,7 @@ class WarriorTest < Test::Unit::TestCase
     
     
     @target = 'http://localhost/'
-    @warrior.attack!(@target)
+    @warrior.attack(@target)
   end
   
 

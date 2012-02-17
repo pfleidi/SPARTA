@@ -13,7 +13,7 @@
 @warrior = @bootcamp.new_warrior
 @warrior.arm(Weapon.new(:apache_benchmark))
 
-@warrior.attack!(:target => 'heise.de', {:intensity=>500, :ramp_up=>50})
+@warrior.attack(:target => 'heise.de', {:intensity=>500, :ramp_up=>50})
 
 csv = @warrior.collect_results
 

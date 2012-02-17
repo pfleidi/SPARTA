@@ -26,6 +26,8 @@ class AmazonEC2 < Sparta::BootCamp
       :public_key_path  => '~/.ssh/id_rsa.pub',
       :tags => {:sparta_session_id => Sparta::session_uuid}
     )
+
+
     Sparta::BootCamp.running_instances << @instance
 
     @instance.id

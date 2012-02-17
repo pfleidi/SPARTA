@@ -8,8 +8,8 @@ class IntegrationTest < Test::Unit::TestCase
     warrior = Warrior.new(:provider => :localprovider)
     weapon = Weapon.create(:ApacheBenchmark)
     warrior.arm(weapon)
-    warrior.attack!('http://blog.roothausen.de/', { :requests => 100, :clients => 20 })
-    warrior.kill!
+    warrior.attack('http://blog.roothausen.de/', { :requests => 100, :clients => 20 })
+    warrior.kill
   end
 
 end

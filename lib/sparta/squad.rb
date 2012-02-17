@@ -1,3 +1,8 @@
+require 'rubygems'
+require 'bundler/setup'
+
+require 'celluloid'
+
 module Sparta
   class Squad
     attr_reader :warriors
@@ -8,30 +13,26 @@ module Sparta
     end
 
     def add_warriors(count, env = {})
-      threads = []
+      futures = []
 
       (0 ... count).each do |number|
-        threads << Thread.new do
-          retry_count = env[:max_retry] || 0
+        futures << Celluloid::Future.new { Warrior.new(env) }
+      end
 
+      Timeout::timeout(360) do
+        futures.each do |f|
           begin
-            @warriors << Warrior.new(env)
-          rescue
-            if retry_count > 0
-              retry_count -= 1
-              retry
-            else
-
-              raise "Warrior not reachable after #{env[:max_retry]} retries."
+            Timeout::timeout(8) do
+              if(f.value)
+                @warriors << f.value
+              end
             end
+          rescue
+            sleep(2)
+            retry
           end
         end
       end
-
-      threads.each do |t|
-        t.join
-      end
-
     end
 
     def arm(weapon)
@@ -49,6 +50,7 @@ module Sparta
     end
 
     def attack!(env = {})
+
       if(env[:ramp_up])
         ramp_up_time = env[:ramp_up][:period]
         raise "Squad attack ramp up: period missing" unless ramp_up_time
@@ -57,15 +59,15 @@ module Sparta
 
         if ramp_up_function == :linear
           delays = Array.new(@warriors.size){ramp_up_time / @warriors.size}
-          @warriors.each_with_index { |warrior,index| warrior.attack!('http://localhost/'); sleep(delays[index]); puts 'attacking' }
+          @warriors.each_with_index { |warrior,index| warrior.attack('http://localhost/'); sleep(delays[index]);}
         end
       else
-        @warriors.each { |warrior| warrior.attack!('http://localhost') }
+        @warriors.each { |warrior| warrior.attack('http://localhost') }
       end
     end
 
     def kill!
-      @warriors.each { |warrior| warrior.kill! }
+      @warriors.each { |warrior| warrior.kill }
       @warriors.clear
     end
   end

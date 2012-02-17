@@ -15,14 +15,6 @@ class SquadTest < Test::Unit::TestCase
     assert_equal 3, squad.warriors.length
   end
 
-  def test_creating_squad_failing_warrior
-    Sparta::Warrior.stubs(:new).raises(StandardError, 'warrior failed')
-    
-    assert_raise RuntimeError do
-      squad = Sparta::Squad.new(3,{:provider => :localprovider})
-    end
-  end
-
   def test_removing_squad
     squad = Sparta::Squad.new(3,{:provider => :localprovider})
     squad.kill!

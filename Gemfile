@@ -2,6 +2,7 @@ source "http://rubygems.org"
 
 gem "fog"
 gem "sshkey"
+gem "celluloid"
 
 group :test do
   gem "rake"
