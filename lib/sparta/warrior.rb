@@ -8,9 +8,7 @@ require 'celluloid'
 module Sparta
   class Warrior   
 
-    attr_accessor :state
-    attr_accessor :weapon
-    attr_accessor :bootcamp
+    attr_accessor :state, :weapon, :bootcamp
 
     def initialize(bootcamp_params = {})
       begin

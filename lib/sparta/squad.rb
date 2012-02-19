@@ -15,7 +15,7 @@ module Sparta
     def add_warriors(count, env = {})
       futures = []
 
-      (0 ... count).each do |number|
+      (0 ... count).each do 
         futures << Celluloid::Future.new { Warrior.new(env) }
       end
 
@@ -42,11 +42,7 @@ module Sparta
     end
 
     def is_armed?
-      @warriors.each do |warrior|
-        return false if not warrior.is_armed?
-      end
-
-      return true
+      @warriors.map { |warrior| warrior.is_armed? }.all?
     end
 
     def attack!(env = {})

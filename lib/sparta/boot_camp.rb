@@ -34,11 +34,7 @@ module Sparta
     # dumps a remote file and returns the contents.
     def dump_file(file)
       res = ssh("cat #{file}")
-      if ( res.stdout )
-        res.stdout
-      else
-        nil
-      end
+      res.stdout ? res.stdout : nil
     end
 
     def self.inherited(child)
