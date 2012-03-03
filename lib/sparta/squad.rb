@@ -20,11 +20,7 @@ module Sparta
       Timeout::timeout(360) do
         futures.each do |f|
           begin
-            Timeout::timeout(8) do
-              if(f.value)
-                @warriors << f.value
-              end
-            end
+            Timeout::timeout(8) { @warriors << f.value if f.value }
           rescue
             sleep(2)
             retry
