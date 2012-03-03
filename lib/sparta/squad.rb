@@ -15,18 +15,12 @@ module Sparta
     def add_warriors(count, env = {})
       futures = []
 
-      (0 ... count).each do 
-        futures << Celluloid::Future.new { Warrior.new(env) }
-      end
+      count.times { futures << Celluloid::Future.new { Warrior.new env } }
 
       Timeout::timeout(360) do
         futures.each do |f|
           begin
-            Timeout::timeout(8) do
-              if(f.value)
-                @warriors << f.value
-              end
-            end
+            Timeout::timeout(8) { @warriors << f.value if f.value }
           rescue
             sleep(2)
             retry
@@ -36,9 +30,7 @@ module Sparta
     end
 
     def arm(weapon)
-      @warriors.each do |w| 
-        w.arm(weapon)
-      end
+      @warriors.each { |w| w.arm(weapon) }
     end
 
     def is_armed?
