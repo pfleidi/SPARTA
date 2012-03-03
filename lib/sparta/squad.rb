@@ -30,9 +30,7 @@ module Sparta
     end
 
     def arm(weapon)
-      @warriors.each do |w| 
-        w.arm(weapon)
-      end
+      @warriors.each { |w| w.arm(weapon) }
     end
 
     def is_armed?
