@@ -15,7 +15,7 @@ module Sparta
     def add_warriors(count, env = {})
       futures = []
 
-      count.times do futures << Celluloid::Future.new { Warrior.new env }
+      count.times { futures << Celluloid::Future.new { Warrior.new env } }
 
       Timeout::timeout(360) do
         futures.each do |f|
