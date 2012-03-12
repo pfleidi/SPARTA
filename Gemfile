@@ -7,7 +7,7 @@ gem "celluloid"
 group :test do
   gem "rake"
   gem "cucumber"
-  gem "rcov"
+  gem "simplecov"
   gem "test-unit"
   gem "mocha"
   gem "net-netrc"
