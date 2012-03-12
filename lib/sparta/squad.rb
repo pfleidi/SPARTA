@@ -1,8 +1,6 @@
 require 'rubygems'
 require 'bundler/setup'
 
-require 'celluloid'
-
 module Sparta
   class Squad
     attr_reader :warriors
@@ -13,24 +11,11 @@ module Sparta
     end
 
     def add_warriors(count, env = {})
-      futures = []
-
-      count.times { futures << Celluloid::Future.new { Warrior.new env } }
-
-      Timeout::timeout(360) do
-        futures.each do |f|
-          begin
-            Timeout::timeout(8) { @warriors << f.value if f.value }
-          rescue
-            sleep(2)
-            retry
-          end
-        end
-      end
+      count.times { @warriors << Warrior.new(env) }
     end
 
     def arm(weapon)
-      @warriors.each { |w| w.arm(weapon) }
+      @warriors.each { |warrior| warrior.arm(weapon) }
     end
 
     def is_armed?
@@ -38,16 +23,15 @@ module Sparta
     end
 
     def attack!(env = {})
-
-      if(env[:ramp_up])
+      if env[:ramp_up]
         ramp_up_time = env[:ramp_up][:period]
         raise "Squad attack ramp up: period missing" unless ramp_up_time
 
         ramp_up_function = env[:ramp_up][:function] || :linear
 
         if ramp_up_function == :linear
-          delays = Array.new(@warriors.size){ramp_up_time / @warriors.size}
-          @warriors.each_with_index { |warrior,index| warrior.attack('http://localhost/'); sleep(delays[index]);}
+          delays = Array.new(@warriors.size) { ramp_up_time / @warriors.size }
+          @warriors.each_with_index { |warrior, index| warrior.attack('http://localhost/'); sleep(delays[index]);}
         end
       else
         @warriors.each { |warrior| warrior.attack('http://localhost') }
@@ -58,5 +42,6 @@ module Sparta
       @warriors.each { |warrior| warrior.kill }
       @warriors.clear
     end
+
   end
 end

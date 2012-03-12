@@ -1,9 +1,6 @@
 require 'rubygems'
 require 'bundler/setup'
-#require 'net/ssh'
-
 require 'timeout'
-require 'celluloid'
 
 module Sparta
   class Warrior   
@@ -40,7 +37,7 @@ module Sparta
       @weapon.is_working?
     end
 
-    def attack(target, options={})
+    def attack(target, options = {})
       raise "need a target!" unless target
       raise "need a connection!" unless self.bootcamp
       @weapon.use(target, options)
@@ -50,8 +47,9 @@ module Sparta
       @bootcamp.kill!
     end
 
-    def ssh(command = "")
+    def ssh(command)
       @bootcamp.ssh(command)
     end
+
   end
 end
