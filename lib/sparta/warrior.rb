@@ -37,7 +37,7 @@ module Sparta
     end
 
     def is_armed?
-      not @weapon.nil?
+      @weapon.is_working?
     end
 
     def attack(target, options={})

@@ -69,7 +69,6 @@ module Sparta
     end
 
     def use(target, options = {})
-      
       @bootcamp.ssh(usage_description(target, options))
     end
 
