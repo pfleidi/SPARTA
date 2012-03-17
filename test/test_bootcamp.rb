@@ -1,12 +1,11 @@
 require 'helper'
 
 class BootcampTest < Test::Unit::TestCase
+
   def setup
     @bootcamp = Sparta::BootCamp.create_instance(:provider => :localprovider)
     
     assert(@bootcamp)
-    
-    
   end
   
   def test_initializer
@@ -23,7 +22,7 @@ class BootcampTest < Test::Unit::TestCase
   end
   
   def test_credentials_from_netrc
-    bootcamp = Sparta::BootCamp.create_instance(:provider => :AmazonEC2,     :options => { :ami_id => 'fufufufufu' })
+    bootcamp = Sparta::BootCamp.create_instance(:provider => :AmazonEC2, :options => { :ami_id => 'fufufufufu' })
     
     assert(bootcamp.credentials)
   end
@@ -39,7 +38,7 @@ class BootcampTest < Test::Unit::TestCase
     
     ifconfig = @bootcamp.ssh('ifconfig')
     
-    assert_not_nil ( ifconfig)
+    assert_not_nil ifconfig
   end
   
   def test_ssh_working

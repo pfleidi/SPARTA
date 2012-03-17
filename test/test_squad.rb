@@ -11,42 +11,42 @@ class SquadTest < Test::Unit::TestCase
   end
 
   def test_creating_squad
-    squad = Sparta::Squad.new(3,{:provider => :localprovider})
+    squad = Sparta::Squad.new(3, { :provider => :localprovider })
     assert_equal 3, squad.warriors.length
   end
 
   def test_removing_squad
-    squad = Sparta::Squad.new(3,{:provider => :localprovider})
+    squad = Sparta::Squad.new(3, { :provider => :localprovider })
     squad.kill!
     assert squad.warriors.empty?
   end
 
   def test_arm_squad
-    squad = Sparta::Squad.new(3,{:provider => :localprovider})
-    squad.arm(@mock_weapon)
+    squad = Sparta::Squad.new(3, { :provider => :localprovider })
+    squad.arm { @mock_weapon }
 
-    assert_equal false, squad.warriors.collect { |w| w.is_armed? }.include?(false)
+    assert_equal false, squad.warriors.collect { |warrior| warrior.is_armed? }.include?(false)
   end
 
   def test_is_armed
-    squad = Sparta::Squad.new(3,{:provider => :localprovider})
+    squad = Sparta::Squad.new(3, { :provider => :localprovider })
 
-    squad.arm(@mock_weapon)
+    squad.arm { @mock_weapon }
 
     assert squad.is_armed?
   end
 
   def test_attack
-    squad = Sparta::Squad.new(3,{:provider => 'localprovider'})
+    squad = Sparta::Squad.new(3, { :provider => 'localprovider' })
     @mock_weapon.expects(:use).at_least_once
-    squad.arm(@mock_weapon)
+    squad.arm { @mock_weapon }
     squad.attack!
   end
 
   def test_attack_ramp_up
-    squad = Sparta::Squad.new(30,{:provider => 'localprovider'})
+    squad = Sparta::Squad.new(30, { :provider => 'localprovider' })
     @mock_weapon.expects(:use).at_least_once
-    squad.arm(@mock_weapon)
-    squad.attack!(:ramp_up => {:period => 10})
+    squad.arm { @mock_weapon }
+    squad.attack!(:ramp_up => { :period => 10 })
   end
 end
