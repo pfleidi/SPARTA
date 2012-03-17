@@ -3,7 +3,7 @@ require 'helper'
 class BootcampTest < Test::Unit::TestCase
 
   def setup
-    @bootcamp = Sparta::BootCamp.create(:provider => :localprovider)
+    @bootcamp = Sparta::BootCamp.create(:provider => :LocalProvider)
     
     assert(@bootcamp)
   end

@@ -1,7 +1,7 @@
 require 'rubygems'
-require 'bundler/setup'
 
 module Sparta
+
   class BootCamp
     attr_reader :credentials
 
@@ -14,9 +14,9 @@ module Sparta
     end
 
     def self.create(opts)
-      provider = opts[:provider].to_s.downcase
+      provider = opts[:provider].to_s
       raise 'Need an provider to instantiate bootcamp' unless provider
-      className = boot_camps[provider.to_s.downcase.to_sym]
+      className = boot_camps[provider.to_s.to_sym]
       raise "Provider #{provider.to_s} is unknown." unless className
 
       credentials = Sparta::Credentials.provide_for_provider(opts[:provider])
@@ -39,7 +39,7 @@ module Sparta
 
     def self.inherited(child)
       puts "Loaded #{child}"
-      bootcampName = child.name.to_s.downcase.to_sym
+      bootcampName = child.name.to_s.to_sym
       self.boot_camps[bootcampName] = child
     end
 
