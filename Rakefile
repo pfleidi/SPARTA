@@ -17,7 +17,7 @@ end
 
 desc "Generate RCov test coverage and open in your browser"
 task :coverage do
-  require 'rcov'
+  require 'simplecov'
   sh "rm -fr coverage"
   sh "rcov -I lib:test test/test_*.rb"
   sh "open coverage/index.html"
