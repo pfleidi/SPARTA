@@ -1,55 +1,76 @@
 require 'rubygems'
-require 'bundler/setup'
+require 'celluloid'
 require 'timeout'
 
 module Sparta
-  class Warrior   
 
-    attr_accessor :state, :weapon, :bootcamp
+  class Warrior
+    include Celluloid
 
-    def initialize(bootcamp_params = {})
+    attr_reader :weapon
+
+    def initialize(bootcamp)
+      @bootcamp = bootcamp
+
       begin
         Timeout::timeout(360) do
-          @bootcamp = Sparta::BootCamp.create_instance(bootcamp_params)
-          @instance_id = @bootcamp.connect!
-          self
+          @instance_id = @bootcamp.connect
         end
-      rescue
-        raise "Warrior init failed"
+      rescue => err
+        raise "Warrior init failed: #{err.inspect}"
       end
     end
 
     def arm(weapon)
       @weapon = weapon
-      @weapon.install(@bootcamp)
-
-      if(@weapon.is_working?)
-        begin
-          @bootcamp.add_tag('weapon', weapon.class.name)
-        rescue
-        end
-      else
-        @weapon = nil
-      end
+      install_weapon
+      add_tag
     end
 
     def is_armed?
-      @weapon.is_working?
+      @bootcamp.ssh(@weapon.test_description).status == 0
     end
 
     def attack(target, options = {})
       raise "need a target!" unless target
-      raise "need a connection!" unless self.bootcamp
-      @weapon.use(target, options)
+      @bootcamp.ssh(@weapon.usage_description(target, options))
     end
 
     def kill
       @bootcamp.kill!
     end
 
-    def ssh(command)
+    def order(command)
       @bootcamp.ssh(command)
     end
 
+    def report
+      @result_contents = @bootcamp.dump_file(@weapon.result_file)
+    end
+
+    private
+
+    def add_tag
+      if is_armed?
+        @bootcamp.add_tag('weapon', @weapon.class.name)
+      else
+        raise "Tag could not be added because weapon is not working"
+      end
+    end
+
+    def install_weapon
+      @weapon.package_description.each do |manager, command|
+        result = @bootcamp.ssh(command)
+        if result.status == 0
+          if is_armed?
+            break
+          else
+            raise "ERROR: Package installed but still not working. Bailing out."
+          end
+        end
+      end
+    end
+
   end
+
 end

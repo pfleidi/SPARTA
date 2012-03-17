@@ -1,6 +1,6 @@
-
 # Rubygems
 require 'rubygems'
+require 'bundler/setup'
 require 'SecureRandom'
 
 # Internal requires

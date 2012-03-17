@@ -1,31 +1,95 @@
 require 'helper'
 
 class WarriorTest < Test::Unit::TestCase
-  
+  include Sparta
+
   def setup
-    @mock_ssh = mock
-    @warrior = Sparta::Warrior.new({:provider=>'localprovider'})
-    assert(@warrior.bootcamp)
-    @weapon_sequence= sequence('random firing sequence')
-    
-
+    @weapon = Weapon.create(:ApacheBenchmark)
   end
-  
 
-  
-  def test_warrior
-    mock_weapon = mock
-    
-    mock_weapon.expects(:install).with(@warrior.bootcamp).in_sequence(@weapon_sequence)
-    mock_weapon.expects(:'is_working?').returns(true).in_sequence(@weapon_sequence)
-    mock_weapon.expects(:'use').in_sequence(@weapon_sequence)
-    @warrior.arm(mock_weapon)
-    assert(@warrior.is_armed?)
-    
-    
-    @target = 'http://localhost/'
-    @warrior.attack(@target)
+  def test_init
+    bootcamp = mock
+    bootcamp.expects(:connect)
+    warrior = Warrior.new(bootcamp)
+    assert(warrior.is_a?(Warrior))
   end
-  
+
+  def test_arm
+    bootcamp, seq = mock_bootcamp
+
+    bootcamp.expects(:ssh).with(@weapon.test_description).returns(
+      stub('fakeResult', :status => 0)
+    ).in_sequence(seq)
+
+    bootcamp.expects(:add_tag).with('weapon', @weapon.class.name).in_sequence(seq)
+
+    bootcamp.expects(:ssh).with(@weapon.test_description).returns(
+      stub('fakeResult', :status => 0)
+    ).in_sequence(seq)
+
+    warrior = Warrior.new(bootcamp)
+    warrior.arm(@weapon)
+    assert_equal(warrior.weapon, @weapon)
+    assert(warrior.is_armed?)
+  end
+
+  def test_arm_fail
+    bootcamp, seq = mock_bootcamp(stub('fakeResult', :status => 127))
+    warrior = Warrior.new(bootcamp)
+
+    assert_raise(RuntimeError) do
+      warrior.arm(@weapon)
+    end
+  end
+
+  def test_kill
+    bootcamp = mock
+    seq = sequence('kill sequence')
+    bootcamp.expects(:connect).in_sequence(seq)
+    bootcamp.expects(:kill!).in_sequence(seq)
+    warrior = Warrior.new(bootcamp)
+    warrior.kill
+  end
+
+  def test_order
+    command = 'testcommand! 234'
+    bootcamp = mock
+    seq = sequence('order sequence')
+    bootcamp.expects(:connect).in_sequence(seq)
+    bootcamp.expects(:ssh).with(command).in_sequence(seq)
+
+    warrior = Warrior.new(bootcamp)
+    warrior.order(command)
+  end
+
+  private
+
+  def mock_bootcamp(success_return = stub('fakeResult', :status => 0))
+    bootcamp = mock
+    seq = sequence('loading weapon')
+    bootcamp.expects(:connect).in_sequence(seq)
+
+    @weapon.package_description.each do |manager, command|
+
+      if manager == :pacman
+        bootcamp.expects(:ssh).with(command).returns(
+          stub("fakeResult", :status => 0)
+        ).in_sequence(seq)
+
+        bootcamp.expects(:ssh).with(
+          @weapon.test_description
+        ).returns(success_return).in_sequence(seq)
+        break
+      else
+        bootcamp.expects(:ssh).with(command).returns(
+          stub('fakeResult', :status => 127)
+        ).in_sequence(seq)
+      end
+    end
+
+    [bootcamp , seq]
+  end
+
+
 
 end
