@@ -1,7 +1,7 @@
 require 'rubygems'
-require 'bundler/setup'
 
 module Sparta
+
   class Squad
     attr_reader :warriors
 
@@ -10,12 +10,8 @@ module Sparta
       add_warriors(count, env)
     end
 
-    def add_warriors(count, env = {})
-      count.times { @warriors << Warrior.new(env) }
-    end
-
-    def arm(weapon)
-      @warriors.each { |warrior| warrior.arm(weapon) }
+    def arm
+      @warriors.each { |warrior| warrior.arm(yield) }
     end
 
     def is_armed?
@@ -31,7 +27,9 @@ module Sparta
 
         if ramp_up_function == :linear
           delays = Array.new(@warriors.size) { ramp_up_time / @warriors.size }
-          @warriors.each_with_index { |warrior, index| warrior.attack('http://localhost/'); sleep(delays[index]);}
+          @warriors.each_with_index do |warrior, index|
+            warrior.attack('http://localhost/'); sleep(delays[index]);
+          end
         end
       else
         @warriors.each { |warrior| warrior.attack('http://localhost') }
@@ -43,5 +41,12 @@ module Sparta
       @warriors.clear
     end
 
+    private
+
+    def add_warriors(count, env)
+      count.times { @warriors << Warrior.new(BootCamp.create(env)) }
+    end
+
   end
+
 end

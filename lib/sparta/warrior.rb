@@ -14,7 +14,7 @@ module Sparta
 
       begin
         Timeout::timeout(360) do
-          @instance_id = @bootcamp.connect
+          @instance_id = @bootcamp.connect!
         end
       rescue => err
         raise "Warrior init failed: #{err.inspect}"

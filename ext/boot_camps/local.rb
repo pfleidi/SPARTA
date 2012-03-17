@@ -15,6 +15,10 @@ class LocalProvider < Sparta::BootCamp
 
   end
 
+  def add_tag(key, value)
+
+  end
+
   def ssh(command)
     result = Fog::SSH::Result.new(command)
 

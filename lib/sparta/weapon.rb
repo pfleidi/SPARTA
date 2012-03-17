@@ -38,7 +38,6 @@ module Sparta
       raise "not implemented in base class"
     end
 
-
     def create_result
       raise "Not Implemented in base class"
     end

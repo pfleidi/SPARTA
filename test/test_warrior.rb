@@ -9,7 +9,7 @@ class WarriorTest < Test::Unit::TestCase
 
   def test_init
     bootcamp = mock
-    bootcamp.expects(:connect)
+    bootcamp.expects(:connect!)
     warrior = Warrior.new(bootcamp)
     assert(warrior.is_a?(Warrior))
   end
@@ -45,7 +45,7 @@ class WarriorTest < Test::Unit::TestCase
   def test_kill
     bootcamp = mock
     seq = sequence('kill sequence')
-    bootcamp.expects(:connect).in_sequence(seq)
+    bootcamp.expects(:connect!).in_sequence(seq)
     bootcamp.expects(:kill!).in_sequence(seq)
     warrior = Warrior.new(bootcamp)
     warrior.kill
@@ -55,7 +55,7 @@ class WarriorTest < Test::Unit::TestCase
     command = 'testcommand! 234'
     bootcamp = mock
     seq = sequence('order sequence')
-    bootcamp.expects(:connect).in_sequence(seq)
+    bootcamp.expects(:connect!).in_sequence(seq)
     bootcamp.expects(:ssh).with(command).in_sequence(seq)
 
     warrior = Warrior.new(bootcamp)
@@ -67,7 +67,7 @@ class WarriorTest < Test::Unit::TestCase
   def mock_bootcamp(success_return = stub('fakeResult', :status => 0))
     bootcamp = mock
     seq = sequence('loading weapon')
-    bootcamp.expects(:connect).in_sequence(seq)
+    bootcamp.expects(:connect!).in_sequence(seq)
 
     @weapon.package_description.each do |manager, command|
 
