@@ -13,7 +13,7 @@ module Sparta
       @boot_camps ||= {}
     end
 
-    def self.create_instance(opts)
+    def self.create(opts)
       provider = opts[:provider].to_s.downcase
       raise 'Need an provider to instantiate bootcamp' unless provider
       className = boot_camps[provider.to_s.downcase.to_sym]
