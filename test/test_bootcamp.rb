@@ -1,9 +1,11 @@
 require 'helper'
 
 class BootcampTest < Test::Unit::TestCase
+  include Sparta
 
   def setup
-    @bootcamp = Sparta::BootCamp.create(:provider => :LocalProvider)
+    @credentials = Credentials.new("foo", "bar")
+    @bootcamp = BootCamp.create(@credentials, { :provider => :LocalProvider })
     
     assert(@bootcamp)
   end
@@ -22,7 +24,7 @@ class BootcampTest < Test::Unit::TestCase
   end
   
   def test_credentials_from_netrc
-    bootcamp = Sparta::BootCamp.create(:provider => :AmazonEC2, :options => { :ami_id => 'fufufufufu' })
+    bootcamp = Sparta::BootCamp.create(@credentials, { :provider => :AmazonEC2, :options => { :ami_id => 'fufufufufu' } })
     
     assert(bootcamp.credentials)
   end
