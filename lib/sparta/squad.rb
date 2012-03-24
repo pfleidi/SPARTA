@@ -1,4 +1,4 @@
-require 'rubygems'
+  require 'rubygems'
 
 module Sparta
 
@@ -44,7 +44,9 @@ module Sparta
     private
 
     def add_warriors(count, env)
-      count.times { @warriors << Warrior.new(BootCamp.create(env)) }
+      provider = env[:provider].to_s
+      credentials = Credentials.provide_for_provider(provider)
+      count.times { @warriors << Warrior.new(BootCamp.create(credentials, env)) }
     end
 
   end
