@@ -6,20 +6,19 @@ module Sparta
     attr_reader :credentials
 
     def initialize(credentials, options)
-      raise "Not Implemented in base class"
+      raise NotImplementedError
     end
 
     def self.boot_camps
       @boot_camps ||= {}
     end
 
-    def self.create(opts)
+    def self.create(credentials, opts)
       provider = opts[:provider].to_s
       raise 'Need an provider to instantiate bootcamp' unless provider
       className = boot_camps[provider.to_s.to_sym]
       raise "Provider #{provider.to_s} is unknown." unless className
 
-      credentials = Sparta::Credentials.provide_for_provider(opts[:provider])
       return className.new(credentials, opts)
     end
 
@@ -38,7 +37,6 @@ module Sparta
     end
 
     def self.inherited(child)
-      puts "Loaded #{child}"
       bootcampName = child.name.to_s.to_sym
       self.boot_camps[bootcampName] = child
     end
