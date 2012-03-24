@@ -31,7 +31,7 @@ module Sparta
         end
       end
 
-      raise "No credentials found" if new_credentials.nil?
+      raise "No credentials found for #{provider}" if new_credentials.nil?
 
       new_credentials
     end
