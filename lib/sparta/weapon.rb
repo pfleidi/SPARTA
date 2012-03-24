@@ -18,7 +18,7 @@ module Sparta
 
     # returns the result of the test
     def result
-      raise "not implemented in base class"
+      raise NotImplementedError
     end
 
     def self.inherited(child)
@@ -35,11 +35,11 @@ module Sparta
     end
 
     def result_file
-      raise "not implemented in base class"
+      raise NotImplementedError
     end
 
     def create_result
-      raise "Not Implemented in base class"
+      raise NotImplementedError
     end
 
     Weapon.load!
