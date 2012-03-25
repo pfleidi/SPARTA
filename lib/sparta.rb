@@ -11,6 +11,7 @@ require 'sparta/warrior'
 require 'sparta/boot_camp'
 require 'sparta/credentials'
 require 'sparta/logger'
+require 'sparta/barrack'
 
 module Sparta
   VERSION = "0.0.1"

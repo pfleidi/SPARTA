@@ -59,7 +59,7 @@ module Sparta
       end
     end
 
-    def connect!
+    def connect
       raise "Not implemented in base class."
     end
   end

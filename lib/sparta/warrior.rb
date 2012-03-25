@@ -1,20 +1,19 @@
 require 'rubygems'
-require 'celluloid'
 require 'timeout'
 
 module Sparta
 
   class Warrior
-    include Celluloid
-
     attr_reader :weapon
 
     def initialize(bootcamp)
       @bootcamp = bootcamp
+    end
 
+    def create
       begin
         Timeout::timeout(360) do
-          @instance_id = @bootcamp.connect!
+          @instance_id = @bootcamp.connect
         end
       rescue => err
         raise "Warrior init failed: #{err.inspect}"

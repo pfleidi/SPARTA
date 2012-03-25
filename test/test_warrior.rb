@@ -9,14 +9,15 @@ class WarriorTest < Test::Unit::TestCase
 
   def test_init
     bootcamp = mock
-    bootcamp.expects(:connect!)
+    bootcamp.expects(:connect)
     warrior = Warrior.new(bootcamp)
+    warrior.create
     assert(warrior.is_a?(Warrior))
   end
 
   def test_arm
     bootcamp, seq = mock_bootcamp
-
+    
     bootcamp.expects(:ssh).with(@weapon.test_description).returns(
       stub('fakeResult', :status => 0)
     ).in_sequence(seq)
@@ -28,6 +29,7 @@ class WarriorTest < Test::Unit::TestCase
     ).in_sequence(seq)
 
     warrior = Warrior.new(bootcamp)
+    warrior.create
     warrior.arm(@weapon)
     assert_equal(warrior.weapon, @weapon)
     assert(warrior.is_armed?)
@@ -36,7 +38,7 @@ class WarriorTest < Test::Unit::TestCase
   def test_arm_fail
     bootcamp, seq = mock_bootcamp(stub('fakeResult', :status => 127))
     warrior = Warrior.new(bootcamp)
-
+    warrior.create
     assert_raise(RuntimeError) do
       warrior.arm(@weapon)
     end
@@ -45,9 +47,10 @@ class WarriorTest < Test::Unit::TestCase
   def test_kill
     bootcamp = mock
     seq = sequence('kill sequence')
-    bootcamp.expects(:connect!).in_sequence(seq)
+    bootcamp.expects(:connect).in_sequence(seq)
     bootcamp.expects(:kill!).in_sequence(seq)
     warrior = Warrior.new(bootcamp)
+    warrior.create
     warrior.kill
   end
 
@@ -55,10 +58,11 @@ class WarriorTest < Test::Unit::TestCase
     command = 'testcommand! 234'
     bootcamp = mock
     seq = sequence('order sequence')
-    bootcamp.expects(:connect!).in_sequence(seq)
+    bootcamp.expects(:connect).in_sequence(seq)
     bootcamp.expects(:ssh).with(command).in_sequence(seq)
 
     warrior = Warrior.new(bootcamp)
+    warrior.create
     warrior.order(command)
   end
 
@@ -67,7 +71,7 @@ class WarriorTest < Test::Unit::TestCase
   def mock_bootcamp(success_return = stub('fakeResult', :status => 0))
     bootcamp = mock
     seq = sequence('loading weapon')
-    bootcamp.expects(:connect!).in_sequence(seq)
+    bootcamp.expects(:connect).in_sequence(seq)
 
     @weapon.package_description.each do |manager, command|
 

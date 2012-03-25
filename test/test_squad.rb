@@ -42,7 +42,7 @@ class SquadTest < Test::Unit::TestCase
     squad = Sparta::Squad.new(3, { :provider => :LocalProvider })
     @mock_weapon.expects(:usage_description).returns('echo working').at_least_once
     squad.arm { @mock_weapon }
-    squad.attack!
+    squad.attack!("http://localhost/")
   end
 
   def test_attack_ramp_up

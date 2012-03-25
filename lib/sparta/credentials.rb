@@ -12,10 +12,15 @@ module Sparta
     end
 
     def self.provide_for_provider(provider)
+      provider = provider.to_s
       # try to load from credentials file
-      credential_file = File.open('config/credentials.yaml')
+      config_path =  File.join(File.dirname(__FILE__), "../../config", "credentials.yaml")
+      
+      credential_file = File.open(config_path)
+      
       if credential_file
         contents = YAML.load(credential_file)
+
         if contents[provider]
           provider_contents = contents[provider]
           new_credentials = Credentials.new(provider_contents['id'], provider_contents['key'])

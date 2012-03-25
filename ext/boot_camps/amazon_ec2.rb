@@ -10,7 +10,7 @@ class AmazonEC2 < Sparta::BootCamp
     @opts = opts
   end
 
-  def connect!(env = {})
+  def connect(env = {})
     # SSH key pair name
     Fog.credential = @opts[:key_pair_name] || :sparta_key_pair
 
