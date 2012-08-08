@@ -11,7 +11,5 @@ group :test do
   gem "test-unit"
   gem "mocha"
   gem "net-netrc"
-  gem "gruff"
-  gem "rmagick"
   gem "nokogiri"
 end

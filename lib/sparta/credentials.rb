@@ -15,12 +15,10 @@ module Sparta
       provider = provider.to_s
       # try to load from credentials file
       config_path =  File.join(File.dirname(__FILE__), "../../config", "credentials.yaml")
-      
       credential_file = File.open(config_path)
       
       if credential_file
         contents = YAML.load(credential_file)
-
         if contents[provider]
           provider_contents = contents[provider]
           new_credentials = Credentials.new(provider_contents['id'], provider_contents['key'])
@@ -37,7 +35,7 @@ module Sparta
       end
 
       raise "No credentials found for #{provider}" if new_credentials.nil?
-
+      
       new_credentials
     end
   end

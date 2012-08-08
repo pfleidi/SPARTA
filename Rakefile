@@ -3,6 +3,8 @@ require 'rake'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), *%w[lib]))
 
+require 'sparta'
+
 require 'cucumber/rake/task'
 Cucumber::Rake::Task.new do |t|
   t.cucumber_opts = %w{--format pretty}

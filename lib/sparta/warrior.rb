@@ -32,6 +32,8 @@ module Sparta
 
     def attack(target, options = {})
       raise "need a target!" unless target
+      puts @weapon.usage_description(target, options)
+
       @bootcamp.ssh(@weapon.usage_description(target, options))
     end
 
@@ -45,6 +47,7 @@ module Sparta
 
     def report
       @result_contents = @bootcamp.dump_file(@weapon.result_file)
+      @weapon.parse(@result_contents)
     end
 
     private

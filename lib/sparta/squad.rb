@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'thread'
 
 module Sparta
   class Squad
@@ -21,6 +22,20 @@ module Sparta
         @warriors.each! { |warrior| warrior.attack(target,options) }
     end
 
+    def report!(options={})
+      result_queue = Queue.new
+
+      @warriors.each! { |warrior| result_queue << warrior.report }
+      
+      results = []
+      
+      while result_queue.length != 0
+        results << result_queue.pop
+      end
+
+      @warriors.first.weapon.merge(results, options)
+    end
+
     def kill!
       @warriors.each! { |warrior| warrior.kill }
       @warriors.clear
@@ -30,8 +45,6 @@ module Sparta
       @warriors.each! do |warrior|
         warrior.create
       end
-
-      puts "done"
     end
 
     def add_warriors(count, env)
