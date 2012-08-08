@@ -8,15 +8,19 @@ module Sparta
 
     def initialize(bootcamp)
       @bootcamp = bootcamp
+      @created = false
     end
 
     def create
-      begin
-        Timeout::timeout(360) do
-          @instance_id = @bootcamp.connect
+      if not @created
+        begin
+          Timeout::timeout(360) do
+            @instance_id = @bootcamp.connect
+            @created = true
+          end
+        rescue => err
+          raise "Warrior init failed: #{err.inspect}"
         end
-      rescue => err
-        raise "Warrior init failed: #{err.inspect}"
       end
     end
 

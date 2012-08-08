@@ -10,8 +10,9 @@ module Sparta
       add_warriors(count, env)
     end
 
-    def arm
-      @warriors.each! { |warrior| warrior.arm(yield) }
+    def arm(&weapon)
+      @armed_weapon = weapon
+      @warriors.each! { |warrior| warrior.arm(weapon.call) }
     end
 
     def is_armed?
@@ -20,6 +21,10 @@ module Sparta
 
     def attack!(target, options={})
         @warriors.each! { |warrior| warrior.attack(target,options) }
+    end
+
+    def rearm
+      @warriors.each! { |warrior| warrior.arm(@armed_weapon.call) }
     end
 
     def report!(options={})
@@ -51,6 +56,8 @@ module Sparta
       provider = env[:provider].to_s
       credentials = Credentials.provide_for_provider(provider)
       count.times { @warriors << Warrior.new(BootCamp.create(credentials, env)) }
+
+      self.create_warriors
     end
   end
 end
